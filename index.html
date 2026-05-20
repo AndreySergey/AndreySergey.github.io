@@ -148,8 +148,14 @@ video{width:100%;border:1px solid var(--line);background:#000;display:block}
   margin-bottom:4px;font-size:11px;}
 .note{margin:0 14px 16px;font-size:12px;color:var(--dim);
   border-left:2px solid var(--dimmer);padding-left:12px;font-style:italic;}
+.dtext{margin:0 14px 14px;border:1px solid var(--line);background:var(--bg);
+  padding:11px 14px;font-size:12px;}
+.dtext .dth{color:var(--amber);font-weight:600;letter-spacing:.1em;
+  font-size:11px;margin-bottom:7px;}
+.dtext p{color:var(--bright);margin-top:8px;line-height:1.62}
+.dtext p:first-of-type{margin-top:0}
 
-/* ---------- АРХИВ: ЗАМОК ---------- */
+/* ---------- АРХИВ: ЗАМКИ ---------- */
 .vault{border:1px solid var(--line);background:var(--bg);padding:40px 26px;
   text-align:center;position:relative;overflow:hidden;}
 .vault::before{content:"";position:absolute;inset:0;
@@ -367,7 +373,7 @@ footer .a{color:var(--amber)}
   <!-- ---------- АРХИВ ---------- -->
   <section class="panel" id="p-arhiv">
     <h2>АРХИВ // ЛИЧНЫЕ ДЕЛА</h2>
-    <p class="hint">Раздел кадрового архива. Доступ оперативной группы по коду.</p>
+    <p class="hint">Раздел кадрового архива Отдела расследований. Доступ оперативной группы — по кодам доступа.</p>
 
     <div class="vault" id="arhivLock">
       <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#63ec9b" stroke-width="1.4">
@@ -377,7 +383,7 @@ footer .a{color:var(--amber)}
         <line x1="12" y1="16.5" x2="12" y2="19"/>
       </svg>
       <div class="vt">ДОСТУП ОГРАНИЧЕН</div>
-      <div class="vm">Раздел личных дел закрыт. Введите код доступа архива К.О.Н.Т.У.Р.</div>
+      <div class="vm">Раздел личных дел закрыт. Введите код доступа архива К.О.Н.Т.У.Р. — он закодирован в QR на фоторамке.</div>
       <div class="vform">
         <div class="inputrow">
           <label class="field"><span class="pr">КОД ►</span>
@@ -391,20 +397,34 @@ footer .a{color:var(--amber)}
 
     <div id="arhivContent" hidden>
       <div class="dossier">
-        <div class="dh"><span>ЛИЧНОЕ ДЕЛО № K-47-013</span><span>ОТДЕЛ РАССЛЕДОВАНИЙ</span></div>
+        <div class="dh"><span>ЛИЧНОЕ ДЕЛО № K7XP4M2R</span><span>ОТДЕЛ РАССЛЕДОВАНИЙ</span></div>
         <div class="stamp">СЕКРЕТНО</div>
         <div class="dbody">
           <div class="photo">ИЗОБРАЖЕНИЕ<br>ПОВРЕЖДЕНО<br>ПОМЕХИ О-41</div>
           <div class="fields">
             <div class="frow"><span class="fk">ФАМИЛИЯ ИМЯ ОТЧЕСТВО</span><span class="fv">Орлов Михаил Андреевич</span></div>
+            <div class="frow"><span class="fk">ГОД И МЕСТО РОЖДЕНИЯ</span><span class="fv">1971 г., пос. зак. типа «Ковчег-1»</span></div>
+            <div class="frow"><span class="fk">ОБРАЗОВАНИЕ</span><span class="fv">высшее юридическое; следственно-оперативная специализация</span></div>
             <div class="frow"><span class="fk">ОТДЕЛ</span><span class="fv">Отдел расследований</span></div>
-            <div class="frow"><span class="fk">ДОЛЖНОСТЬ</span><span class="fv">следователь</span></div>
+            <div class="frow"><span class="fk">ДОЛЖНОСТЬ</span><span class="fv">следователь, старший</span></div>
             <div class="frow"><span class="fk">ПОЗЫВНОЙ</span><span class="fv">«ОРЁЛ»</span></div>
             <div class="frow"><span class="fk">ИНДЕКС ДОПУСКА</span><span class="fv">47</span></div>
-            <div class="frow"><span class="fk">СЕМЕЙНОЕ ПОЛОЖЕНИЕ</span><span class="fv">женат, дочь</span></div>
+            <div class="frow"><span class="fk">СТАЖ В К.О.Н.Т.У.Р.</span><span class="fv">16 лет</span></div>
+            <div class="frow"><span class="fk">СЕМЕЙНОЕ ПОЛОЖЕНИЕ</span><span class="fv">женат; дочь Софья</span></div>
             <div class="frow"><span class="fk">ОБЪЕКТ НАЗНАЧЕНИЯ</span><span class="fv">№ 47, посёлок «Ковчег-3»</span></div>
             <div class="frow"><span class="fk">СТАТУС</span><span class="fv alert">НЕ ВЫШЕЛ НА СВЯЗЬ</span></div>
           </div>
+        </div>
+        <div class="dtext">
+          <div class="dth">ПОСЛУЖНОЙ СПИСОК</div>
+          <p>В систему К.О.Н.Т.У.Р. зачислен в 1995 г. До 1999 г. — оперативный резерв, далее переведён в Отдел расследований. Вёл объекты № 12, № 19, № 28, № 31: все закрыты, оперативные группы выведены без потерь.</p>
+          <p>Назначение на Объект № 47 запросил лично, рапортом, вне очереди нагрузки — после того как с Объекта перестала выходить на связь исследовательская точка. Резолюция руководства: «инициатива удовлетворена; отмечена повторно».</p>
+          <p>Аттестационная характеристика: методичен, дотошен, наблюдателен. К процедуре придирчив. Склонен доводить подозрение до конца — иногда вопреки указаниям.</p>
+        </div>
+        <div class="dtext">
+          <div class="dth">ОСОБАЯ ОТМЕТКА</div>
+          <p>С приданным исследовательской точке мл. лаборантом Павловым Т. А. — отношения служебно-конфликтные. Орлов дважды подавал рапорт о несоответствии стажёра уровню допуска Объекта; оба рапорта отклонены вышестоящим руководством.</p>
+          <p>По итогам последней аттестации замечание вынесено самому Орлову: «допускает предвзятость в оценке младшего состава; рекомендовано воздержаться от личных характеристик».</p>
         </div>
         <div class="callout">
           <div class="ct">ПРОТОКОЛ ДЕШИФРОВКИ</div>
@@ -418,14 +438,72 @@ footer .a{color:var(--amber)}
           что оказался здесь случайно. Случайных здесь нет. — О.»
         </div>
       </div>
+
+      <div class="rule"></div>
+
+      <div class="vault" id="arhiv2Lock">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#63ec9b" stroke-width="1.4">
+          <rect x="3.5" y="10" width="17" height="11.5" rx="0.5"/>
+          <path d="M7 10V6.5a5 5 0 0 1 10 0V10"/>
+          <circle cx="12" cy="15.5" r="1.4" fill="#63ec9b"/>
+          <line x1="12" y1="16.5" x2="12" y2="19"/>
+        </svg>
+        <div class="vt">ВТОРОЕ ЛИЧНОЕ ДЕЛО</div>
+        <div class="vm">В архиве есть ещё одно дело — приданного состава Объекта № 47. Закрыто отдельным кодом. Код — в записях агента Орлова.</div>
+        <div class="vform">
+          <div class="inputrow">
+            <label class="field"><span class="pr">КОД ►</span>
+              <input id="arhiv2Pw" placeholder="код доступа" autocomplete="off" spellcheck="false"></label>
+            <button class="act" id="arhiv2Btn">ОТКРЫТЬ</button>
+          </div>
+          <div class="console" id="arhiv2Out" style="min-height:46px"></div>
+        </div>
+        <div class="stripes"><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+
+      <div id="arhiv2Content" hidden>
+        <div class="dossier">
+          <div class="dh"><span>ЛИЧНОЕ ДЕЛО № D9HV3W8N</span><span>ПРИДАННЫЙ СОСТАВ</span></div>
+          <div class="stamp">КОПИЯ</div>
+          <div class="dbody">
+            <div class="photo">ФОТО<br>В ДЕЛО<br>НЕ ПРИОБЩЕНО</div>
+            <div class="fields">
+              <div class="frow"><span class="fk">ФАМИЛИЯ ИМЯ ОТЧЕСТВО</span><span class="fv">Павлов Тимур Артёмович</span></div>
+              <div class="frow"><span class="fk">ГОД РОЖДЕНИЯ</span><span class="fv">1994 г.</span></div>
+              <div class="frow"><span class="fk">ОБРАЗОВАНИЕ</span><span class="fv">частный лицей-пансион «Меридиан»; 1 курс, Институт прикладной физики — платное отделение</span></div>
+              <div class="frow"><span class="fk">ОТДЕЛ</span><span class="fv">приданный состав исследовательской точки</span></div>
+              <div class="frow"><span class="fk">ДОЛЖНОСТЬ</span><span class="fv">мл. лаборант, стажёр</span></div>
+              <div class="frow"><span class="fk">ПОЗЫВНОЙ</span><span class="fv">не присвоен</span></div>
+              <div class="frow"><span class="fk">ИНДЕКС ДОПУСКА</span><span class="fv">временный</span></div>
+              <div class="frow"><span class="fk">СТАЖ В К.О.Н.Т.У.Р.</span><span class="fv">7 мес.</span></div>
+              <div class="frow"><span class="fk">СЕМЬЯ</span><span class="fv">отец — Павлов А. Л., ген. подрядчик строительства посёлков «Ковчег»; мать — соучредитель лицея-пансиона «Меридиан»</span></div>
+              <div class="frow"><span class="fk">ОБЪЕКТ НАЗНАЧЕНИЯ</span><span class="fv">№ 47, посёлок «Ковчег-3»</span></div>
+              <div class="frow"><span class="fk">СТАТУС</span><span class="fv">числится за Объектом № 47</span></div>
+            </div>
+          </div>
+          <div class="dtext">
+            <div class="dth">ПОСЛУЖНОЙ СПИСОК</div>
+            <p>До перевода на Объект № 47 проходил практику при исследовательской программе «Отражение». Программа закрыта досрочно; материалы изъяты, обстоятельства закрытия в личное дело не внесены.</p>
+            <p>Зачислен мл. лаборантом-стажёром на исследовательскую точку Объекта № 47 вне типового конкурсного отбора — по направлению головного управления.</p>
+            <p>Нормативный квалификационный экзамен на момент зачисления не сдан. Допуск к Объекту оформлен как временный, с отсрочкой аттестации на неопределённый срок.</p>
+            <p>Куратор стажировки, служебная записка: «к самостоятельной работе на Объекте не подготовлен; нахождение на точке — на усмотрение руководства». Записка к личному делу не приобщена.</p>
+            <p>Примечание архива: строительство и инфраструктура посёлков закрытого типа «Ковчег», включая Объект № 47, ведутся генеральным подрядчиком — см. графу «семья».</p>
+          </div>
+          <div class="note">
+            Отметка [вложено вручную, рукой агента Орлова]: «Эту копию я
+            затребовал сам. Возможно, я к нему несправедлив — мне так и записали.
+            Прочтите и решайте сами, не по моему слову. — О.»
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ---------- ЭКСПЕРИМЕНТЫ ---------- -->
   <section class="panel" id="p-exp">
     <h2>ЭКСПЕРИМЕНТЫ // СТАБИЛИЗАТОР КОНТУРА</h2>
-    <p class="hint">Стабилизатор сворачивает Контур-1 обратно в реальность — формирует портал выхода. Для запуска нужно ввести пять калибровочных параметров. Все значения — в записях агента Орлова.</p>
-    <div class="warnbar">⚠ Объект № 47 в состоянии сочленения. Неверная калибровка удержит Контур-1. Сверяйтесь с дневниками, журналом и методичкой.</div>
+    <p class="hint">Сочленение Контур-1 необратимо — копию назад не свернуть. Но при верной калибровке Стабилизатор пробьёт стабильный выход: запечатанная дверь лаборатории раскроется порталом. Введите пять калибровочных параметров.</p>
+    <div class="warnbar">⚠ Сочленение Объекта № 47 необратимо. Калибровка не свернёт Контур — она пробивает выход. Сверяйтесь с записями, журналом и методичкой.</div>
 
     <!-- чек-лист -->
     <div class="checklist" id="checklist">
@@ -463,7 +541,7 @@ footer .a{color:var(--amber)}
       <!-- параметр 2: контуры -->
       <div class="param">
         <div class="ph"><span class="pname">КОНТУРЫ К1–К5</span><span class="pidx">ПАРАМЕТР 2 / 5</span></div>
-        <div class="pdesc">Последовательность стабилизации, тумблеры в порядке К5 → К1.</div>
+        <div class="pdesc">Последовательность контуров выхода, тумблеры в порядке К5 → К1.</div>
         <div class="switches" id="switches">
           <div class="sw" data-c="5"><div class="swlbl">К5</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
           <div class="sw" data-c="4"><div class="swlbl">К4</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
@@ -505,7 +583,7 @@ footer .a{color:var(--amber)}
       <!-- параметр 5: угол -->
       <div class="param">
         <div class="ph"><span class="pname">УГОЛ ИЗЛУЧАТЕЛЯ</span><span class="pidx">ПАРАМЕТР 5 / 5</span></div>
-        <div class="pdesc">Излучатель наводится в ядро Объекта. Значение угла — в схеме дневника.</div>
+        <div class="pdesc">Излучатель наводится в ядро Объекта. Угол по шкале равен номеру Объекта.</div>
         <div class="anglebox">
           <svg width="120" height="120" viewBox="0 0 120 120">
             <circle cx="60" cy="60" r="52" fill="none" stroke="#173a26" stroke-width="1"/>
@@ -549,9 +627,9 @@ footer .a{color:var(--amber)}
 </div>
 
 <div id="portal">
-  <div class="pring"><span>КОНТУР-1</span></div>
-  <h3>ПОРТАЛ АКТИВЕН</h3>
-  <p>Сочленение разомкнуто. Стабильный выход сформирован. Найдите проявившийся контур выхода и покиньте Объект.</p>
+  <div class="pring"><span>ВЫХОД</span></div>
+  <h3>ПОРТАЛ ПРОБИТ</h3>
+  <p>Калибровка принята. Запечатанная дверь лаборатории раскрылась порталом. Идите к ней и покиньте Объект.</p>
   <small id="portalClose">[ свернуть ]</small>
 </div>
 
@@ -753,7 +831,7 @@ function showForeign(names){
   if(names.length){
     html += "<div class='filelist'>Содержимое носителя:";
     names.slice(0,12).forEach(function(n){
-      var hot = /о[-_ ]?41|обра[зс]ец|zayav|заяв/i.test(n);
+      var hot = /о[-_ ]?41|обра[зс]ец|zayav|заяв|perepis|переписк/i.test(n);
       html += "\n  <span class='"+(hot?"hot":"f")+"'>"+n+"</span>";
     });
     html += "\n<span class='lbl'>Терминал не обрабатывает посторонние файлы — просмотрите носитель вручную.</span></div>";
@@ -970,16 +1048,16 @@ document.getElementById("runBtn").addEventListener("click", function(){
   var angOK  = parseInt(angSlider.value,10) === TARGET.ang;
   setTimeout(function(){
     if(contOK && freqOK && specOK && angOK){
-      o.innerHTML = "<span class='ok big'>КАЛИБРОВКА ПОДТВЕРЖДЕНА.\nСОЧЛЕНЕНИЕ РАЗМЫКАЕТСЯ...\nФОРМИРОВАНИЕ ВЫХОДА — 100%</span>";
+      o.innerHTML = "<span class='ok big'>КАЛИБРОВКА ПОДТВЕРЖДЕНА.\nПРОБИВАЕТСЯ ВЫХОД...\nДВЕРЬ ЛАБОРАТОРИИ — ПОРТАЛ. 100%</span>";
       document.getElementById("fstat").textContent = "ВЫХОД ОТКРЫТ";
       setTimeout(function(){ document.getElementById("portal").classList.add("show"); }, 1100);
       return;
     }
     var msg = "<span class='err'>ОТКАЗ. ПОРТАЛ НЕ СФОРМИРОВАН.</span>\n<span class='lbl'>Калибровка неполна:</span>\n";
-    if(!contOK) msg += "<span class='warn'>► КОНТУРЫ: последовательность не стабилизирует Контур. Сверьте журнал и обратное правило.</span>\n";
+    if(!contOK) msg += "<span class='warn'>► КОНТУРЫ: последовательность не складывается в выход. Сверьте журнал и правило на УФ-стене.</span>\n";
     if(!freqOK) msg += "<span class='warn'>► ЧАСТОТА: вне резонанса. Снимите значение с записи АСС.</span>\n";
     if(!specOK) msg += "<span class='warn'>► СПЕКТР: не подавляет О-41. Сверьте фото калибровки.</span>\n";
-    if(!angOK)  msg += "<span class='warn'>► УГОЛ: излучатель не наведён в ядро. Сверьте схему дневника.</span>\n";
+    if(!angOK)  msg += "<span class='warn'>► УГОЛ: излучатель не наведён в ядро. Угол по шкале = номер Объекта.</span>\n";
     o.innerHTML = msg.replace(/\n$/,"");
   }, 950);
 });
@@ -987,34 +1065,46 @@ document.getElementById("portalClose").addEventListener("click", function(){
   document.getElementById("portal").classList.remove("show");
 });
 
-/* ===================== АРХИВ: ЗАМОК ===================== */
-var ARHIV_PW = "K-47-013";
-function canonArhiv(s){
-  /* Латинская K и кириллическая К графически неотличимы — нормализуем.
-     Заодно подменяем длинные тире/пробелы на дефис. */
-  return (s||"").trim().toUpperCase()
-    .replace(/К/g,"K")
-    .replace(/[\s–—]+/g,"-")
-    .replace(/-+/g,"-")
-    .replace(/^-|-$/g,"");
+/* ===================== АРХИВ: ЗАМКИ ===================== */
+var ARHIV_PW  = "K7XP4M2R";   // дело агента Орлова — код в QR на фоторамке
+var ASSIST_PW = "D9HV3W8N";   // дело лаборанта Павлова — код в дневнике (флешка А)
+function canonCode(s){
+  /* верхний регистр; кириллические двойники латиницы -> латиница;
+     пробелы, дефисы, подчёркивания убираются. Код вводится в любой раскладке. */
+  var HG = {А:"A",В:"B",Е:"E",К:"K",М:"M",Н:"H",О:"O",Р:"P",С:"C",Т:"T",У:"Y",Х:"X"};
+  var t = (s||"").toUpperCase().replace(/[\s_–—-]+/g,""), o="";
+  for(var i=0;i<t.length;i++) o += (HG[t[i]] || t[i]);
+  return o;
 }
-function unlockArhiv(){
-  var v = canonArhiv(document.getElementById("arhivPw").value);
-  var o = document.getElementById("arhivOut");
+function tryUnlock(inputId, outId, lockId, contentId, target, failMsg){
+  var v = canonCode(document.getElementById(inputId).value);
+  var o = document.getElementById(outId);
   if(!v){ o.innerHTML = "<span class='warn'>ВВЕДИТЕ КОД ДОСТУПА.</span>"; return; }
   o.innerHTML = "<span class='lbl'>ПРОВЕРКА КОДА ДОСТУПА...</span>";
   setTimeout(function(){
-    if(v === ARHIV_PW){
-      document.getElementById("arhivLock").style.display = "none";
-      document.getElementById("arhivContent").hidden = false;
+    if(v === target){
+      document.getElementById(lockId).style.display = "none";
+      document.getElementById(contentId).hidden = false;
     } else {
-      o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\nДоступ к архиву запрещён. Сверьтесь с QR-носителем кода.</span>";
+      o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\n"+failMsg+"</span>";
     }
   }, 540);
+}
+function unlockArhiv(){
+  tryUnlock("arhivPw","arhivOut","arhivLock","arhivContent",ARHIV_PW,
+    "Доступ к архиву запрещён. Сверьтесь с QR-носителем кода.");
+}
+function unlockAssist(){
+  tryUnlock("arhiv2Pw","arhiv2Out","arhiv2Lock","arhiv2Content",ASSIST_PW,
+    "Это дело закрыто отдельным кодом. См. записи агента Орлова.");
 }
 document.getElementById("arhivBtn").addEventListener("click", unlockArhiv);
 document.getElementById("arhivPw").addEventListener("keydown", function(e){
   if(e.key === "Enter") unlockArhiv();
+});
+document.getElementById("arhiv2Btn").addEventListener("click", unlockAssist);
+document.getElementById("arhiv2Pw").addEventListener("keydown", function(e){
+  if(e.key === "Enter") unlockAssist();
 });
 </script>
 </body>
