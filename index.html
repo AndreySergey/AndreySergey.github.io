@@ -166,9 +166,13 @@ video{width:100%;border:1px solid var(--line);background:#000;display:block}
 .photo{width:108px;height:132px;flex:none;border:1px solid var(--line);
   background:repeating-linear-gradient(45deg,#0c140f 0 6px,#0a100c 6px 12px);
   display:flex;align-items:center;justify-content:center;text-align:center;
-  font-size:9px;color:var(--dimmer);padding:6px;position:relative;overflow:hidden;}
+  font-size:9px;color:var(--dimmer);padding:6px;position:relative;overflow:hidden;
+  z-index:92;} /* выше #crt — снимает с фото тёмные CRT-полосы развёртки */
+.photo::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 38%,rgba(99,236,155,.07) 50%,transparent 62%);
+  animation:band 4s linear infinite;}
 .photo img{position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;display:block;}
+  object-fit:cover;display:block;filter:grayscale(.55) brightness(.9);}
 .fields{flex:1;min-width:220px}
 .frow{display:flex;border-bottom:1px dotted var(--dimmer);padding:5px 0;font-size:12.5px}
 .frow .fk{width:46%;color:var(--dim);letter-spacing:.04em}
@@ -327,12 +331,12 @@ footer .a{color:var(--amber)}
 </head>
 <body>
 
-<div id="crt"></div>
 <div id="scan-band"></div>
 
 <div id="boot"><pre id="bootpre"></pre></div>
 
 <div id="wrap" hidden>
+  <div id="crt"></div>
   <header>
     <div class="mark">
       <svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="#63ec9b">
@@ -516,7 +520,7 @@ footer .a{color:var(--amber)}
   <section class="panel" id="p-exp">
     <h2>ЭКСПЕРИМЕНТЫ // СТАБИЛИЗАТОР КОНТУРА</h2>
     <p class="hint">Сочленение Контур-1 необратимо — копию назад не свернуть. Но при верной калибровке Стабилизатор пробьёт стабильный выход: запечатанная дверь лаборатории раскроется порталом. Введите пять калибровочных параметров.</p>
-    <div class="warnbar">⚠ Сочленение Объекта № 47 необратимо. Калибровка не свернёт Контур — она пробивает выход. Сверяйтесь с записями, журналом и методичкой.</div>
+    <div class="warnbar">⚠ Сочленение Объекта № 47 необратимо. Калибровка не свернёт Контур — она пробивает выход. Сверяйтесь с записями, журналом и доской уровней.</div>
 
     <!-- чек-лист -->
     <div class="checklist" id="checklist">
@@ -530,7 +534,7 @@ footer .a{color:var(--amber)}
     <!-- параметр 1: инженерный код -->
     <div class="param">
       <div class="ph"><span class="pname">ИНЖЕНЕРНЫЙ КОД</span><span class="pidx">ПАРАМЕТР 1 / 5 · БЛОКИРОВКА ПАНЕЛИ</span></div>
-      <div class="pdesc">Защитная блокировка калибровочного режима. Код — пять цифр методички К.О.Н.Т.У.Р. в порядке погружения уровней.</div>
+      <div class="pdesc">Защитная блокировка калибровочного режима. Код — пять цифр с доски уровней в коридоре: картины в порядке погружения, от реальности к ядру.</div>
       <div class="inputrow">
         <label class="field"><span class="pr">КОД ►</span>
           <input id="engInput" placeholder="5 цифр" inputmode="numeric" maxlength="7" autocomplete="off" spellcheck="false"></label>
@@ -1003,7 +1007,7 @@ document.getElementById("engBtn").addEventListener("click", function(){
       setCheck("eng", true, TARGET.eng);
       refreshChecklist();
     } else {
-      o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\nПанель заблокирована. Сверьте порядок уровней по методичке К.О.Н.Т.У.Р.</span>";
+      o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\nПанель заблокирована. Сверьте порядок картин на доске уровней.</span>";
       bumpAnomaly();
     }
   }, 560);
