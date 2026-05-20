@@ -167,11 +167,8 @@ video{width:100%;border:1px solid var(--line);background:#000;display:block}
   background:repeating-linear-gradient(45deg,#0c140f 0 6px,#0a100c 6px 12px);
   display:flex;align-items:center;justify-content:center;text-align:center;
   font-size:9px;color:var(--dimmer);padding:6px;position:relative;overflow:hidden;}
-.photo::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 38%,rgba(99,236,155,.07) 50%,transparent 62%);
-  animation:band 4s linear infinite;}
 .photo img{position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;display:block;filter:grayscale(.55) brightness(.9);}
+  object-fit:cover;display:block;}
 .fields{flex:1;min-width:220px}
 .frow{display:flex;border-bottom:1px dotted var(--dimmer);padding:5px 0;font-size:12.5px}
 .frow .fk{width:46%;color:var(--dim);letter-spacing:.04em}
