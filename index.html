@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>К.О.Н.Т.У.Р. // Терминал — Объект № 47</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070a08; --panel:#0b110d; --panel2:#0e1711;
+  --phos:#63ec9b; --bright:#c4f8da; --dim:#2f6b48;
+  --dimmer:#1c3d2b; --line:#173a26;
+  --amber:#f0b552; --red:#ff6157;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--phos);
+  font-family:'IBM Plex Mono','Cascadia Mono','Consolas',monospace;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+#crt{position:fixed;inset:0;z-index:90;pointer-events:none}
+#crt::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,
+    rgba(0,0,0,0) 0px,rgba(0,0,0,0) 2px,
+    rgba(0,0,0,.28) 3px,rgba(0,0,0,.28) 4px);}
+#crt::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse 90% 75% at 50% 45%,
+    rgba(99,236,155,.05),rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%);}
+#scan-band{position:fixed;left:0;right:0;height:140px;z-index:91;pointer-events:none;
+  background:linear-gradient(180deg,rgba(99,236,155,0),rgba(99,236,155,.045),rgba(99,236,155,0));
+  animation:band 9s linear infinite;}
+@keyframes band{0%{top:-160px}100%{top:100%}}
+@keyframes flick{0%,100%{opacity:1}48%{opacity:.97}49%{opacity:.92}50%{opacity:.99}}
+#wrap{animation:flick 7s infinite}
+
+#boot{position:fixed;inset:0;z-index:100;background:var(--bg);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:8vh 8vw;cursor:pointer;}
+#boot pre{font-size:13px;color:var(--phos);white-space:pre-wrap;
+  text-shadow:0 0 8px rgba(99,236,155,.45);}
+#boot .ln{opacity:0;animation:rise .25s forwards}
+@keyframes rise{to{opacity:1}}
+#boot .enter{color:var(--amber);margin-top:18px}
+.blink{animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+
+#wrap{max-width:880px;margin:0 auto;padding:22px 20px 60px;min-height:100%}
+header{border:1px solid var(--line);background:var(--panel);
+  padding:14px 18px;display:flex;align-items:center;gap:16px;position:relative;}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:1px;
+  background:var(--dimmer);}
+.mark{flex:none}
+.mark svg{display:block;filter:drop-shadow(0 0 5px rgba(99,236,155,.5))}
+.htext{flex:1;min-width:0}
+.htext h1{font-size:18px;font-weight:700;letter-spacing:.42em;
+  text-shadow:0 0 10px rgba(99,236,155,.5);}
+.htext .sub{font-size:11px;color:var(--dim);letter-spacing:.16em;margin-top:3px}
+.hstat{font-size:10.5px;text-align:right;color:var(--dim);line-height:1.7;flex:none}
+.hstat b{color:var(--amber);font-weight:600}
+.hstat .rec::before{content:"";display:inline-block;width:7px;height:7px;
+  border-radius:50%;background:var(--red);margin-right:5px;vertical-align:1px;
+  box-shadow:0 0 6px var(--red);animation:bl 1.4s steps(2) infinite;}
+
+nav{display:flex;flex-wrap:wrap;gap:1px;margin-top:14px;background:var(--dimmer)}
+nav button{flex:1 1 auto;min-width:140px;background:var(--panel);color:var(--dim);
+  border:0;padding:11px 8px;cursor:pointer;font-family:inherit;
+  font-size:11.5px;letter-spacing:.13em;transition:.15s;}
+nav button:hover{color:var(--phos);background:var(--panel2)}
+nav button.on{background-color:var(--phos);color:var(--bg);
+  text-shadow:none;font-weight:600;}
+
+.panel{display:none;border:1px solid var(--line);border-top:0;
+  background:var(--panel);padding:24px 22px;}
+.panel.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:.3}to{opacity:1}}
+.panel h2{font-size:14px;letter-spacing:.2em;font-weight:600;color:var(--bright);
+  margin-bottom:6px;text-shadow:0 0 9px rgba(99,236,155,.4);}
+.panel .hint{font-size:12.5px;color:var(--dim);margin-bottom:18px}
+.rule{height:1px;background:var(--dimmer);margin:18px 0}
+
+.inputrow{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.field{flex:1;min-width:180px;display:flex;align-items:stretch;
+  border:1px solid var(--line);background:var(--bg)}
+.field .pr{padding:9px 10px;color:var(--amber);font-size:13px;
+  border-right:1px solid var(--line);background:var(--panel2);white-space:nowrap;}
+.field input{flex:1;min-width:60px;background:transparent;border:0;outline:0;
+  color:var(--bright);font-family:inherit;font-size:14px;padding:9px 11px;
+  letter-spacing:.06em;text-transform:uppercase;}
+.field input::placeholder{color:var(--dimmer);text-transform:none}
+button.act{background:var(--phos);color:var(--bg);border:0;font-family:inherit;
+  font-weight:700;font-size:12px;letter-spacing:.12em;padding:9px 20px;
+  cursor:pointer;transition:.12s;}
+button.act:hover{background:var(--bright)}
+button.act:active{transform:translateY(1px)}
+button.act:disabled{background:var(--dimmer);color:var(--dim);cursor:not-allowed}
+button.act.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);}
+button.act.ghost:hover{color:var(--phos);background:var(--panel2)}
+
+.console{margin-top:16px;border:1px solid var(--line);background:var(--bg);
+  padding:14px 16px;min-height:74px;font-size:13px;white-space:pre-wrap;}
+.console:empty::before{content:"// НОСИТЕЛЬ НЕ ПОДКЛЮЧЁН";color:var(--dimmer)}
+.console .ok{color:var(--phos)}
+.console .warn{color:var(--amber)}
+.console .err{color:var(--red);text-shadow:0 0 8px rgba(255,97,87,.4)}
+.console .lbl{color:var(--dim)}
+.console .big{font-size:15px;font-weight:700;letter-spacing:.04em}
+.filelist{margin-top:8px;color:var(--dim);font-size:12px}
+.filelist .f{color:var(--bright)}
+.filelist .hot{color:var(--amber);font-weight:600}
+
+.recdoc{border:1px solid var(--phos);background:var(--bg);
+  box-shadow:0 0 24px rgba(99,236,155,.12) inset;}
+.recdoc-h{display:flex;justify-content:space-between;align-items:baseline;
+  padding:9px 14px;border-bottom:1px solid var(--line);background:var(--panel2);
+  font-size:11px;color:var(--amber);letter-spacing:.1em;}
+.recdoc pre{padding:16px;font-size:12.5px;color:var(--bright);
+  white-space:pre-wrap;max-height:340px;overflow:auto;line-height:1.6;}
+video{width:100%;border:1px solid var(--line);background:#000;display:block}
+
+.dossier{border:1px solid var(--line);background:var(--bg);position:relative}
+.dossier .dh{display:flex;justify-content:space-between;align-items:baseline;
+  padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel2);
+  font-size:11px;color:var(--dim);letter-spacing:.1em;}
+.stamp{position:absolute;top:46px;right:18px;border:2px solid var(--red);
+  color:var(--red);font-size:14px;font-weight:700;letter-spacing:.18em;
+  padding:4px 12px;transform:rotate(-13deg);opacity:.62;
+  text-shadow:0 0 8px rgba(255,97,87,.4);}
+.dbody{display:flex;gap:16px;padding:16px 14px;flex-wrap:wrap}
+.photo{width:108px;height:132px;flex:none;border:1px solid var(--line);
+  background:repeating-linear-gradient(45deg,#0c140f 0 6px,#0a100c 6px 12px);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:9px;color:var(--dimmer);padding:6px;position:relative;overflow:hidden;}
+.photo::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 38%,rgba(99,236,155,.07) 50%,transparent 62%);
+  animation:band 4s linear infinite;}
+.fields{flex:1;min-width:220px}
+.frow{display:flex;border-bottom:1px dotted var(--dimmer);padding:5px 0;font-size:12.5px}
+.frow .fk{width:46%;color:var(--dim);letter-spacing:.04em}
+.frow .fv{flex:1;color:var(--bright)}
+.frow .fv.alert{color:var(--red)}
+.callout{margin:0 14px 14px;border:1px solid var(--amber);
+  background:rgba(240,181,82,.06);padding:11px 14px;font-size:12.5px;}
+.callout .ct{color:var(--amber);font-weight:600;letter-spacing:.1em;
+  margin-bottom:4px;font-size:11px;}
+.note{margin:0 14px 16px;font-size:12px;color:var(--dim);
+  border-left:2px solid var(--dimmer);padding-left:12px;font-style:italic;}
+
+/* ---------- ЭКСПЕРИМЕНТЫ / СТАБИЛИЗАТОР ---------- */
+.warnbar{border:1px solid var(--amber);background:rgba(240,181,82,.07);
+  color:var(--amber);font-size:11.5px;padding:8px 12px;margin-bottom:16px;
+  letter-spacing:.04em;}
+/* чек-лист параметров */
+.checklist{border:1px solid var(--line);background:var(--bg);margin-bottom:18px}
+.checklist .ci{display:flex;align-items:center;gap:10px;padding:8px 13px;
+  border-bottom:1px solid var(--dimmer);font-size:12px;}
+.checklist .ci:last-child{border-bottom:0}
+.checklist .box{width:15px;height:15px;border:1px solid var(--dim);flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+  color:var(--bg);font-weight:700;}
+.checklist .ci.done .box{background:var(--phos);border-color:var(--phos)}
+.checklist .nm{flex:1;color:var(--dim);letter-spacing:.06em}
+.checklist .ci.done .nm{color:var(--phos)}
+.checklist .vl{color:var(--bright);font-size:12px}
+.checklist .ci.empty .vl{color:var(--dimmer)}
+
+.calib{position:relative}
+.lockover{position:absolute;inset:0;z-index:5;background:rgba(7,10,8,.86);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:30px;font-size:12px;color:var(--dim);letter-spacing:.06em;}
+.lockover.hide{display:none}
+.lockover svg{margin-bottom:10px}
+
+.param{border:1px solid var(--line);background:var(--bg);
+  padding:14px 16px;margin-bottom:12px;}
+.param .ph{display:flex;justify-content:space-between;align-items:baseline;
+  margin-bottom:12px;}
+.param .pname{font-size:11px;letter-spacing:.14em;color:var(--bright);font-weight:600}
+.param .pidx{font-size:10px;color:var(--dim);letter-spacing:.1em}
+.param .pdesc{font-size:11px;color:var(--dim);margin-bottom:12px;margin-top:-6px}
+
+.switches{display:flex;gap:13px;flex-wrap:wrap;justify-content:center}
+.sw{display:flex;flex-direction:column;align-items:center;gap:6px}
+.sw .swlbl{font-size:11px;color:var(--dim);letter-spacing:.08em}
+.sw .track{width:42px;height:68px;border:1px solid var(--line);background:var(--bg);
+  position:relative;cursor:pointer;padding:4px;}
+.sw .knob{position:absolute;left:4px;right:4px;height:29px;background:var(--dimmer);
+  border:1px solid var(--dim);bottom:4px;transition:.13s;}
+.sw.on .knob{bottom:31px;background:var(--phos);border-color:var(--bright);
+  box-shadow:0 0 12px rgba(99,236,155,.6);}
+.sw .mk{position:absolute;right:-13px;font-size:9px;color:var(--dimmer)}
+.sw .mk.t{top:5px}.sw .mk.b{bottom:5px}
+.sw .state{font-size:13px;font-weight:700;color:var(--dim)}
+.sw.on .state{color:var(--phos);text-shadow:0 0 8px rgba(99,236,155,.5)}
+
+/* ползунки */
+.dialrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.dialread{font-size:30px;font-weight:700;color:var(--bright);
+  text-shadow:0 0 14px rgba(99,236,155,.5);letter-spacing:.02em;min-width:118px;}
+.dialread .u{font-size:14px;color:var(--dim);font-weight:400;margin-left:3px}
+.sliderwrap{flex:1;min-width:200px;display:flex;align-items:center;gap:10px}
+.stepbtn{width:30px;height:30px;flex:none;background:var(--panel2);
+  border:1px solid var(--line);color:var(--phos);font-family:inherit;
+  font-size:16px;cursor:pointer;line-height:1;}
+.stepbtn:hover{background:var(--line)}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:4px;
+  background:var(--dimmer);outline:0;border-radius:0;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+  width:14px;height:24px;background:var(--phos);cursor:pointer;
+  box-shadow:0 0 8px rgba(99,236,155,.6);}
+input[type=range]::-moz-range-thumb{width:14px;height:24px;border:0;
+  background:var(--phos);cursor:pointer;box-shadow:0 0 8px rgba(99,236,155,.6);}
+.ticks{display:flex;justify-content:space-between;font-size:9px;
+  color:var(--dimmer);margin-top:4px;}
+
+/* угловой циферблат */
+.anglebox{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.anglebox svg{flex:none}
+.anglebox .actrl{flex:1;min-width:200px}
+
+/* спектр */
+.spectrum{display:flex;gap:7px;flex-wrap:wrap}
+.swatch{flex:1;min-width:96px;border:1px solid var(--line);background:var(--bg);
+  cursor:pointer;padding:8px;display:flex;flex-direction:column;gap:7px;
+  align-items:center;transition:.12s;}
+.swatch:hover{border-color:var(--dim)}
+.swatch.sel{border-color:var(--phos);box-shadow:0 0 12px rgba(99,236,155,.25)}
+.swatch .lamp{width:100%;height:26px;border:1px solid rgba(255,255,255,.15)}
+.swatch .slabel{font-size:10px;color:var(--dim);letter-spacing:.04em;text-align:center}
+.swatch.sel .slabel{color:var(--bright)}
+
+#portal{display:none;position:fixed;inset:0;z-index:95;background:rgba(7,10,8,.93);
+  align-items:center;justify-content:center;flex-direction:column;text-align:center;
+  padding:30px;}
+#portal.show{display:flex;animation:fade .4s}
+.pring{width:230px;height:230px;border-radius:50%;border:2px solid var(--phos);
+  box-shadow:0 0 60px rgba(99,236,155,.55),inset 0 0 70px rgba(99,236,155,.4);
+  display:flex;align-items:center;justify-content:center;
+  animation:pulse 2.2s ease-in-out infinite;position:relative;}
+.pring::before,.pring::after{content:"";position:absolute;border-radius:50%;
+  border:1px solid var(--phos);opacity:.5;}
+.pring::before{inset:26px}
+.pring::after{inset:58px;border-color:var(--bright);opacity:.8}
+.pring span{font-size:11px;letter-spacing:.2em;color:var(--bright);z-index:2}
+@keyframes pulse{50%{transform:scale(1.06);
+  box-shadow:0 0 90px rgba(99,236,155,.8),inset 0 0 90px rgba(99,236,155,.55)}}
+#portal h3{margin-top:30px;font-size:20px;letter-spacing:.22em;color:var(--bright);
+  text-shadow:0 0 16px rgba(99,236,155,.6);}
+#portal p{margin-top:12px;font-size:13px;color:var(--phos);max-width:440px}
+#portal small{margin-top:20px;color:var(--dim);font-size:11px;
+  letter-spacing:.1em;cursor:pointer;}
+
+footer{margin-top:14px;display:flex;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;font-size:10px;color:var(--dimmer);letter-spacing:.1em;}
+footer .a{color:var(--amber)}
+@media(max-width:560px){
+  .htext h1{font-size:14px;letter-spacing:.28em}
+  .hstat{display:none}
+  nav button{min-width:48%}
+  #wrap{padding:16px 12px 50px}
+  .dialread{font-size:24px;min-width:92px}
+}
+</style>
+</head>
+<body>
+
+<div id="crt"></div>
+<div id="scan-band"></div>
+
+<div id="boot"><pre id="bootpre"></pre></div>
+
+<div id="wrap" hidden>
+  <header>
+    <div class="mark">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="#63ec9b">
+        <circle cx="22" cy="22" r="20" stroke-width="1.4" opacity=".4"/>
+        <circle cx="22" cy="22" r="13" stroke-width="1.4" opacity=".7"/>
+        <circle cx="22" cy="22" r="6" stroke-width="1.6"/>
+        <path d="M22 2 V9 M22 35 V42 M2 22 H9 M35 22 H42" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <div class="htext">
+      <h1>К.О.Н.Т.У.Р.</h1>
+      <div class="sub">КОНТРОЛЬ ОБЪЕКТОВ НЕИЗВЕСТНОГО ТИПА И УСЛОВНОЙ РЕАЛЬНОСТИ</div>
+    </div>
+    <div class="hstat">
+      <div class="rec">ЗАПИСЬ СЕАНСА</div>
+      <div>ОБЪЕКТ <b>№ 47</b></div>
+      <div>УРОВЕНЬ <b>КОНТУР-1</b></div>
+    </div>
+  </header>
+
+  <nav id="nav">
+    <button data-tab="media" class="on">НОСИТЕЛИ ДАННЫХ</button>
+    <button data-tab="arhiv">АРХИВ</button>
+    <button data-tab="exp">ЭКСПЕРИМЕНТЫ</button>
+  </nav>
+
+  <!-- ---------- НОСИТЕЛИ ---------- -->
+  <section class="panel on" id="p-media">
+    <h2>НОСИТЕЛИ ДАННЫХ</h2>
+    <p class="hint">Подключите флешку к компьютеру и нажмите кнопку. В окне браузера выберите подключённый носитель — терминал опознает его автоматически.</p>
+    <div class="inputrow">
+      <button class="act" id="connectBtn">▸ ПОДКЛЮЧИТЬ НОСИТЕЛЬ</button>
+      <button class="act ghost" id="resetBtn">СБРОС</button>
+    </div>
+    <div class="console" id="mediaOut"></div>
+
+    <div id="pwBlock" hidden>
+      <div class="rule"></div>
+      <p class="hint">Носитель зашифрован. Введите личный шифр-ключ агента для расшифровки.</p>
+      <div class="inputrow">
+        <label class="field"><span class="pr">КЛЮЧ ►</span>
+          <input id="pwInput" placeholder="шифр-ключ агента" autocomplete="off" spellcheck="false"></label>
+        <button class="act" id="pwBtn">РАСШИФРОВАТЬ</button>
+      </div>
+    </div>
+
+    <div id="docBlock" hidden>
+      <div class="rule"></div>
+      <div class="recdoc">
+        <div class="recdoc-h"><span id="docTitle">—</span><span>ДАННЫЕ ВОССТАНОВЛЕНЫ</span></div>
+        <pre id="docBody"></pre>
+      </div>
+      <div class="inputrow" style="margin-top:10px">
+        <button class="act ghost" id="dlBtn" hidden>СКАЧАТЬ РАСШИФРОВАННЫЙ ФАЙЛ</button>
+      </div>
+    </div>
+
+    <div id="vidBlock" hidden>
+      <div class="rule"></div>
+      <video id="accVideo" controls playsinline></video>
+    </div>
+
+    <div id="fbBlock" hidden>
+      <div class="rule"></div>
+      <p class="hint">Запасной режим (браузер не поддерживает прямую работу с носителем). Выберите файл носителя <b>.knt</b> вручную.</p>
+      <input type="file" id="fbFile" accept=".knt,.KNT">
+    </div>
+  </section>
+
+  <!-- ---------- АРХИВ ---------- -->
+  <section class="panel" id="p-arhiv">
+    <h2>АРХИВ // ЛИЧНЫЕ ДЕЛА</h2>
+    <p class="hint">Раздел кадрового архива. Доступ оперативной группы по запросу.</p>
+    <div class="dossier">
+      <div class="dh"><span>ЛИЧНОЕ ДЕЛО № К-47-013</span><span>ОТДЕЛ РАССЛЕДОВАНИЙ</span></div>
+      <div class="stamp">СЕКРЕТНО</div>
+      <div class="dbody">
+        <div class="photo">ИЗОБРАЖЕНИЕ<br>ПОВРЕЖДЕНО<br>ПОМЕХИ О-41</div>
+        <div class="fields">
+          <div class="frow"><span class="fk">ФАМИЛИЯ ИМЯ ОТЧЕСТВО</span><span class="fv">Орлов Михаил Андреевич</span></div>
+          <div class="frow"><span class="fk">ОТДЕЛ</span><span class="fv">Отдел расследований</span></div>
+          <div class="frow"><span class="fk">ДОЛЖНОСТЬ</span><span class="fv">следователь</span></div>
+          <div class="frow"><span class="fk">ПОЗЫВНОЙ</span><span class="fv">«ОРЁЛ»</span></div>
+          <div class="frow"><span class="fk">ИНДЕКС ДОПУСКА</span><span class="fv">47</span></div>
+          <div class="frow"><span class="fk">СЕМЕЙНОЕ ПОЛОЖЕНИЕ</span><span class="fv">женат, дочь</span></div>
+          <div class="frow"><span class="fk">ОБЪЕКТ НАЗНАЧЕНИЯ</span><span class="fv">№ 47, посёлок «Ковчег-3»</span></div>
+          <div class="frow"><span class="fk">СТАТУС</span><span class="fv alert">НЕ ВЫШЕЛ НА СВЯЗЬ</span></div>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="ct">ПРОТОКОЛ ДЕШИФРОВКИ</div>
+        Личный шифр-ключ сотрудника формируется по стандарту К.О.Н.Т.У.Р.:
+        <b>позывной латиницей + индекс допуска</b>. Этим ключом расшифровываются
+        зашифрованные носители сотрудника в разделе «Носители данных».
+      </div>
+      <div class="note">
+        Служебная отметка [вложено вручную]: «Если вы это читаете — идите по
+        носителям, я оставил всё нужное по порядку. И не верьте тому, кто скажет,
+        что оказался здесь случайно. Случайных здесь нет. — О.»
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- ЭКСПЕРИМЕНТЫ ---------- -->
+  <section class="panel" id="p-exp">
+    <h2>ЭКСПЕРИМЕНТЫ // СТАБИЛИЗАТОР КОНТУРА</h2>
+    <p class="hint">Стабилизатор сворачивает Контур-1 обратно в реальность — формирует портал выхода. Для запуска нужно ввести пять калибровочных параметров. Все значения — в записях агента Орлова.</p>
+    <div class="warnbar">⚠ Объект № 47 в состоянии сочленения. Неверная калибровка удержит Контур-1. Сверяйтесь с дневниками, журналом и методичкой.</div>
+
+    <!-- чек-лист -->
+    <div class="checklist" id="checklist">
+      <div class="ci empty" data-k="eng"><div class="box">✓</div><div class="nm">1 · ИНЖЕНЕРНЫЙ КОД</div><div class="vl">— — — — —</div></div>
+      <div class="ci empty" data-k="cont"><div class="box">✓</div><div class="nm">2 · КОНТУРЫ К1–К5</div><div class="vl">заблокировано</div></div>
+      <div class="ci empty" data-k="freq"><div class="box">✓</div><div class="nm">3 · ЧАСТОТА РЕЗОНАНСА</div><div class="vl">заблокировано</div></div>
+      <div class="ci empty" data-k="spec"><div class="box">✓</div><div class="nm">4 · СПЕКТР</div><div class="vl">заблокировано</div></div>
+      <div class="ci empty" data-k="ang"><div class="box">✓</div><div class="nm">5 · УГОЛ ИЗЛУЧАТЕЛЯ</div><div class="vl">заблокировано</div></div>
+    </div>
+
+    <!-- параметр 1: инженерный код -->
+    <div class="param">
+      <div class="ph"><span class="pname">ИНЖЕНЕРНЫЙ КОД</span><span class="pidx">ПАРАМЕТР 1 / 5 · БЛОКИРОВКА ПАНЕЛИ</span></div>
+      <div class="pdesc">Защитная блокировка калибровочного режима. Код — пять цифр методички К.О.Н.Т.У.Р. в порядке погружения уровней.</div>
+      <div class="inputrow">
+        <label class="field"><span class="pr">КОД ►</span>
+          <input id="engInput" placeholder="5 цифр" inputmode="numeric" maxlength="7" autocomplete="off" spellcheck="false"></label>
+        <button class="act" id="engBtn">РАЗБЛОКИРОВАТЬ</button>
+      </div>
+      <div class="console" id="engOut" style="min-height:46px"></div>
+    </div>
+
+    <!-- параметры 2-5 (заблокированы до кода) -->
+    <div class="calib">
+      <div class="lockover" id="lockover">
+        <div>
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#2f6b48" stroke-width="1.6">
+            <rect x="4" y="10" width="16" height="11"/>
+            <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+          </svg>
+          <div>КАЛИБРОВОЧНЫЙ РЕЖИМ ЗАБЛОКИРОВАН<br>введите инженерный код выше</div>
+        </div>
+      </div>
+
+      <!-- параметр 2: контуры -->
+      <div class="param">
+        <div class="ph"><span class="pname">КОНТУРЫ К1–К5</span><span class="pidx">ПАРАМЕТР 2 / 5</span></div>
+        <div class="pdesc">Последовательность стабилизации, тумблеры в порядке К5 → К1.</div>
+        <div class="switches" id="switches">
+          <div class="sw" data-c="5"><div class="swlbl">К5</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+          <div class="sw" data-c="4"><div class="swlbl">К4</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+          <div class="sw" data-c="3"><div class="swlbl">К3</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+          <div class="sw" data-c="2"><div class="swlbl">К2</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+          <div class="sw" data-c="1"><div class="swlbl">К1</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+        </div>
+      </div>
+
+      <!-- параметр 3: частота -->
+      <div class="param">
+        <div class="ph"><span class="pname">ЧАСТОТА РЕЗОНАНСА</span><span class="pidx">ПАРАМЕТР 3 / 5</span></div>
+        <div class="pdesc">Стабилизатор должен войти в резонанс. Значение частоты — на записи АСС.</div>
+        <div class="dialrow">
+          <div class="dialread"><span id="freqVal">0</span><span class="u">Гц</span></div>
+          <div class="sliderwrap">
+            <button class="stepbtn" data-step="freq" data-d="-1">−</button>
+            <input type="range" id="freqSlider" min="0" max="60" step="1" value="0">
+            <button class="stepbtn" data-step="freq" data-d="1">+</button>
+          </div>
+        </div>
+        <div class="ticks"><span>0</span><span>15</span><span>30</span><span>45</span><span>60 Гц</span></div>
+      </div>
+
+      <!-- параметр 4: спектр -->
+      <div class="param">
+        <div class="ph"><span class="pname">СПЕКТР</span><span class="pidx">ПАРАМЕТР 4 / 5</span></div>
+        <div class="pdesc">Узкий участок спектра, подавляющий О-41. Цвет — на фото калибровки.</div>
+        <div class="spectrum" id="spectrum">
+          <div class="swatch" data-s="violet"><div class="lamp" style="background:#7d4bd1"></div><div class="slabel">ФИОЛЕТОВЫЙ · 405 нм</div></div>
+          <div class="swatch" data-s="blue"><div class="lamp" style="background:#3b73d6"></div><div class="slabel">СИНИЙ · 470 нм</div></div>
+          <div class="swatch" data-s="green"><div class="lamp" style="background:#46c66a"></div><div class="slabel">ЗЕЛЁНЫЙ · 525 нм</div></div>
+          <div class="swatch" data-s="yellow"><div class="lamp" style="background:#e3cc3e"></div><div class="slabel">ЖЁЛТЫЙ · 590 нм</div></div>
+          <div class="swatch" data-s="amber"><div class="lamp" style="background:#e08a2c"></div><div class="slabel">ЯНТАРНЫЙ · 615 нм</div></div>
+          <div class="swatch" data-s="red"><div class="lamp" style="background:#cf3b35"></div><div class="slabel">КРАСНЫЙ · 660 нм</div></div>
+        </div>
+      </div>
+
+      <!-- параметр 5: угол -->
+      <div class="param">
+        <div class="ph"><span class="pname">УГОЛ ИЗЛУЧАТЕЛЯ</span><span class="pidx">ПАРАМЕТР 5 / 5</span></div>
+        <div class="pdesc">Излучатель наводится в ядро Объекта. Значение угла — в схеме дневника.</div>
+        <div class="anglebox">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#173a26" stroke-width="1"/>
+            <circle cx="60" cy="60" r="40" fill="none" stroke="#1c3d2b" stroke-width="1"/>
+            <g stroke="#2f6b48" stroke-width="1">
+              <line x1="60" y1="8" x2="60" y2="16"/>
+              <line x1="112" y1="60" x2="104" y2="60"/>
+              <line x1="60" y1="112" x2="60" y2="104"/>
+              <line x1="8" y1="60" x2="16" y2="60"/>
+            </g>
+            <circle cx="60" cy="60" r="5" fill="#173a26" stroke="#63ec9b" stroke-width="1"/>
+            <line id="needle" x1="60" y1="60" x2="60" y2="14"
+                  stroke="#63ec9b" stroke-width="2.4"
+                  style="filter:drop-shadow(0 0 4px rgba(99,236,155,.7))"/>
+          </svg>
+          <div class="actrl">
+            <div class="dialrow">
+              <div class="dialread"><span id="angVal">0</span><span class="u">°</span></div>
+              <div class="sliderwrap">
+                <button class="stepbtn" data-step="ang" data-d="-1">−</button>
+                <input type="range" id="angSlider" min="0" max="90" step="1" value="0">
+                <button class="stepbtn" data-step="ang" data-d="1">+</button>
+              </div>
+            </div>
+            <div class="ticks"><span>0°</span><span>30°</span><span>60°</span><span>90°</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="inputrow" style="margin-top:6px">
+      <button class="act" id="runBtn" disabled>ЗАПУСК СТАБИЛИЗАЦИИ</button>
+    </div>
+    <div class="console" id="runOut"></div>
+  </section>
+
+  <footer>
+    <span>ТЕРМИНАЛ К.О.Н.Т.У.Р. v3.1 / ОТДЕЛ РАССЛЕДОВАНИЙ</span>
+    <span id="fstat" class="a">АНОМАЛЬНАЯ АКТИВНОСТЬ — ПОВЫШЕННАЯ</span>
+  </footer>
+</div>
+
+<div id="portal">
+  <div class="pring"><span>КОНТУР-1</span></div>
+  <h3>ПОРТАЛ АКТИВЕН</h3>
+  <p>Сочленение разомкнуто. Стабильный выход сформирован. Найдите проявившийся контур выхода и покиньте Объект.</p>
+  <small id="portalClose">[ свернуть ]</small>
+</div>
+
+<script>
+"use strict";
+
+/* ===================== ЗАГРУЗКА ===================== */
+var bootLines = [
+  "К.О.Н.Т.У.Р. // СИСТЕМА КОНТРОЛЯ ОБЪЕКТОВ",
+  "————————————————————————————————",
+  "> инициализация ядра ............ ОК",
+  "> носители ввода/вывода ......... ОК",
+  "> канал связи с архивом ......... НЕСТАБИЛЬНО",
+  "> привязка к Объекту № 47 ....... КОНТУР-1",
+  "> Стабилизатор контура .......... ОЖИДАНИЕ КАЛИБРОВКИ",
+  "————————————————————————————————",
+  "ТЕРМИНАЛ ОТДЕЛА РАССЛЕДОВАНИЙ",
+  "доступ оперативной группы разрешён"
+];
+var booted = false;
+function enterTerminal(){
+  if(booted) return; booted = true;
+  document.getElementById("boot").style.display = "none";
+  document.getElementById("wrap").hidden = false;
+  applyHash();
+}
+(function runBoot(){
+  if(location.hash.toLowerCase().indexOf("arhiv")>-1
+     || location.hash.toLowerCase().indexOf("архив")>-1){ enterTerminal(); return; }
+  var pre = document.getElementById("bootpre");
+  bootLines.forEach(function(t,i){
+    var d = document.createElement("div");
+    d.className = "ln"; d.textContent = t;
+    d.style.animationDelay = (i*0.22)+"s";
+    pre.appendChild(d);
+  });
+  var e = document.createElement("div");
+  e.className = "ln enter";
+  e.innerHTML = "[ нажмите для входа в систему ]<span class='blink'>_</span>";
+  e.style.animationDelay = (bootLines.length*0.22+0.2)+"s";
+  pre.appendChild(e);
+  setTimeout(enterTerminal, bootLines.length*220 + 1900);
+})();
+document.getElementById("boot").addEventListener("click", enterTerminal);
+document.addEventListener("keydown", function(){ if(!booted) enterTerminal(); });
+
+/* ===================== НАВИГАЦИЯ ===================== */
+function showTab(name){
+  var nav = document.getElementById("nav");
+  [].forEach.call(nav.children, function(b){
+    b.classList.toggle("on", b.dataset.tab === name);
+  });
+  ["media","arhiv","exp"].forEach(function(n){
+    document.getElementById("p-"+n).classList.toggle("on", n === name);
+  });
+}
+document.getElementById("nav").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  showTab(b.dataset.tab);
+  history.replaceState(null,"","#"+b.dataset.tab);
+});
+function applyHash(){
+  var h = location.hash.replace("#","").toLowerCase();
+  if(h.indexOf("arhiv")>-1 || h.indexOf("архив")>-1){ showTab("arhiv"); }
+  else if(h==="exp"){ showTab("exp"); }
+  else { showTab("media"); }
+}
+window.addEventListener("hashchange", function(){ if(booted) applyHash(); });
+
+/* ===================== ШИФРОВАНИЕ ===================== */
+var MARKER = "KNTR-OK::";
+function canonKey(raw){
+  /* кириллица -> латиница, верхний регистр. Идентична generator.html */
+  var C2L = {А:"A",Б:"B",В:"V",Г:"G",Д:"D",Е:"E",Ё:"E",Ж:"ZH",З:"Z",И:"I",
+    Й:"I",К:"K",Л:"L",М:"M",Н:"N",О:"O",П:"P",Р:"R",С:"S",Т:"T",У:"U",
+    Ф:"F",Х:"KH",Ц:"TS",Ч:"CH",Ш:"SH",Щ:"SCH",Ъ:"",Ы:"Y",Ь:"",Э:"E",Ю:"YU",Я:"YA"};
+  var s = (raw||"").toUpperCase().replace(/\s+/g,""), o="";
+  for(var i=0;i<s.length;i++) o += (C2L.hasOwnProperty(s[i]) ? C2L[s[i]] : s[i]);
+  return o;
+}
+function xorBytes(bytes, keyStr){
+  var key = new TextEncoder().encode(keyStr);
+  var out = new Uint8Array(bytes.length);
+  for(var i=0;i<bytes.length;i++) out[i] = bytes[i] ^ key[i % key.length];
+  return out;
+}
+function b64ToBytes(b64){
+  var s = atob(b64.replace(/\s+/g,""));
+  var bytes = new Uint8Array(s.length);
+  for(var i=0;i<s.length;i++) bytes[i] = s.charCodeAt(i);
+  return bytes;
+}
+function decryptPayload(b64, rawKey){
+  try{
+    var bytes = xorBytes(b64ToBytes(b64), canonKey(rawKey));
+    var text = new TextDecoder("utf-8",{fatal:false}).decode(bytes);
+    if(text.indexOf(MARKER) === 0) return text.slice(MARKER.length);
+  }catch(e){}
+  return null;
+}
+function parseKnt(raw){
+  var code="", type="", inData=false, dataLines=[];
+  raw.split(/\r?\n/).forEach(function(ln){
+    if(inData){ dataLines.push(ln); return; }
+    if(/^КОД\s*=/.test(ln)) code = ln.replace(/^КОД\s*=/,"").trim();
+    else if(/^ТИП\s*=/.test(ln)) type = ln.replace(/^ТИП\s*=/,"").trim();
+    else if(/^ДАННЫЕ\s*=/.test(ln)){ inData=true; }
+  });
+  return {code:code,type:type,payload:dataLines.join("").replace(/\s+/g,"")};
+}
+
+/* ===================== НОСИТЕЛИ ===================== */
+var SUPPORTED = !!window.showDirectoryPicker;
+var state = { dir:null, knt:null };
+var elOut  = document.getElementById("mediaOut");
+var elPwB  = document.getElementById("pwBlock");
+var elDocB = document.getElementById("docBlock");
+var elVidB = document.getElementById("vidBlock");
+var elFbB  = document.getElementById("fbBlock");
+
+function resetMedia(){
+  state = { dir:null, knt:null };
+  elOut.innerHTML = "";
+  elPwB.hidden = elDocB.hidden = elVidB.hidden = true;
+  document.getElementById("pwInput").value = "";
+  document.getElementById("dlBtn").hidden = true;
+  var v = document.getElementById("accVideo");
+  if(v.src){ try{URL.revokeObjectURL(v.src);}catch(e){} v.removeAttribute("src"); }
+}
+document.getElementById("resetBtn").addEventListener("click", resetMedia);
+function out(html){ elOut.innerHTML = html; }
+function typeInto(node, text){
+  var i=0;
+  (function st(){ if(i<=text.length){ node.textContent=text.slice(0,i); i+=2; setTimeout(st,7);} })();
+}
+
+document.getElementById("connectBtn").addEventListener("click", async function(){
+  resetMedia();
+  if(!SUPPORTED){
+    out("<span class='warn'>ПРЯМОЙ ДОСТУП К НОСИТЕЛЮ НЕДОСТУПЕН.\n"+
+        "Браузер не поддерживает автосканирование. Рекомендуется Chrome или Edge.\n"+
+        "Включён запасной режим — выберите файл носителя вручную.</span>");
+    elFbB.hidden = false; return;
+  }
+  var dir;
+  try{ dir = await window.showDirectoryPicker({ mode:"readwrite" }); }
+  catch(e){
+    if(e && e.name === "AbortError"){ out("<span class='lbl'>Сканирование отменено.</span>"); return; }
+    out("<span class='err'>НЕТ ДОСТУПА К НОСИТЕЛЮ.\nОткройте терминал по адресу https:// в браузере Chrome/Edge.</span>");
+    elFbB.hidden = false; return;
+  }
+  state.dir = dir;
+  out("<span class='lbl'>СКАНИРОВАНИЕ НОСИТЕЛЯ...</span>");
+  await scanDir(dir);
+});
+
+async function scanDir(dir){
+  var knt=[], media=[], other=[];
+  try{
+    for await (const entry of dir.values()){
+      if(entry.kind !== "file") continue;
+      var low = entry.name.toLowerCase();
+      if(low.endsWith(".knt")) knt.push(entry);
+      else if(/\.(mp4|webm|mov|m4v|avi)$/.test(low)) media.push(entry);
+      else other.push(entry.name);
+    }
+  }catch(e){ out("<span class='err'>ОШИБКА ЧТЕНИЯ НОСИТЕЛЯ.</span>"); return; }
+  if(knt.length){ await loadKnt(knt[0]); }
+  else if(media.length){ await loadMedia(media[0]); }
+  else { showForeign(other); }
+}
+
+async function loadKnt(handle){
+  var file = await handle.getFile();
+  var raw  = await file.text();
+  var p = parseKnt(raw);
+  if(!p.payload){
+    out("<span class='err'>НОСИТЕЛЬ ПОВРЕЖДЁН.\nФайл "+file.name+" не содержит читаемых данных К.О.Н.Т.У.Р.</span>");
+    return;
+  }
+  state.knt = p;
+  var span = document.createElement("span");
+  elOut.innerHTML = ""; elOut.appendChild(span);
+  span.className = "ok";
+  typeInto(span, "НОСИТЕЛЬ ОПОЗНАН.\n"+
+    "КОД: "+(p.code||"—")+"\n"+
+    "ТИП: "+(p.type||"архивные данные")+"\n"+
+    "СОСТОЯНИЕ: ДАННЫЕ ЗАШИФРОВАНЫ.\n"+
+    "► Введите личный шифр-ключ агента для расшифровки.");
+  elPwB.hidden = false;
+}
+async function loadMedia(handle){
+  var file = await handle.getFile();
+  out("<span class='ok'>НОСИТЕЛЬ ОПОЗНАН.\nОбнаружена видеозапись автономной системы съёмки (АСС).\n► Воспроизведение авторизовано.</span>");
+  var v = document.getElementById("accVideo");
+  v.src = URL.createObjectURL(file);
+  elVidB.hidden = false;
+}
+function showForeign(names){
+  var html = "<span class='warn'>ПОСТОРОННИЙ НОСИТЕЛЬ.\nДанные К.О.Н.Т.У.Р. на устройстве не обнаружены.</span>";
+  if(names.length){
+    html += "<div class='filelist'>Содержимое носителя:";
+    names.slice(0,12).forEach(function(n){
+      var hot = /о[-_ ]?41|обра[зс]ец|zayav|заяв/i.test(n);
+      html += "\n  <span class='"+(hot?"hot":"f")+"'>"+n+"</span>";
+    });
+    html += "\n<span class='lbl'>Терминал не обрабатывает посторонние файлы — просмотрите носитель вручную.</span></div>";
+  }
+  out(html);
+}
+
+document.getElementById("pwBtn").addEventListener("click", function(){
+  if(!state.knt) return;
+  var key = document.getElementById("pwInput").value;
+  if(!key.trim()) return;
+  var prev = elOut.querySelector("span") ? elOut.querySelector("span").textContent : "";
+  elOut.innerHTML = "<span class='lbl'>РАСШИФРОВКА...</span>";
+  setTimeout(function(){
+    var content = decryptPayload(state.knt.payload, key);
+    if(content !== null){
+      elOut.innerHTML = "<span class='ok'>ШИФР-КЛЮЧ ПРИНЯТ. ДАННЫЕ ВОССТАНОВЛЕНЫ.</span>";
+      showDoc(state.knt.code, state.knt.type, content);
+      writeBack(state.knt.code, state.knt.type, content);
+    } else {
+      elOut.innerHTML = "<span class='ok'>"+prev+"</span>\n\n"+
+        "<span class='err'>ШИФР-КЛЮЧ ОТКЛОНЁН.\nКлюч не подходит к этому носителю. Сверьтесь с личным делом агента в разделе АРХИВ.</span>";
+    }
+  }, 620);
+});
+document.getElementById("pwInput").addEventListener("keydown", function(e){
+  if(e.key === "Enter") document.getElementById("pwBtn").click();
+});
+
+function showDoc(code, type, content){
+  document.getElementById("docTitle").textContent =
+    (code||"НОСИТЕЛЬ") + (type ? " // " + type : "");
+  document.getElementById("docBody").textContent = content;
+  elDocB.hidden = false;
+}
+function buildDocHTML(code, type, content){
+  var esc = content.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">'+
+    '<title>'+code+' // К.О.Н.Т.У.Р.</title><style>'+
+    'body{background:#070a08;color:#63ec9b;font-family:"IBM Plex Mono",Consolas,monospace;'+
+    'margin:0;padding:40px 6vw;line-height:1.6}'+
+    '.h{border:1px solid #173a26;background:#0b110d;padding:14px 18px;margin-bottom:18px}'+
+    '.h b{color:#c4f8da;letter-spacing:.2em}.h div{color:#2f6b48;font-size:12px;margin-top:4px}'+
+    'pre{white-space:pre-wrap;color:#c4f8da;font-size:14px;'+
+    'border:1px solid #173a26;background:#0b110d;padding:20px}'+
+    '.f{color:#2f6b48;font-size:11px;margin-top:16px;letter-spacing:.1em}'+
+    '</style></head><body><div class="h"><b>К.О.Н.Т.У.Р. // ВОССТАНОВЛЕННЫЙ ДОКУМЕНТ</b>'+
+    '<div>НОСИТЕЛЬ: '+code+' &nbsp;|&nbsp; ТИП: '+(type||"архив")+
+    ' &nbsp;|&nbsp; ОБЪЕКТ № 47</div></div><pre>'+esc+'</pre>'+
+    '<div class="f">РАСШИФРОВАНО ТЕРМИНАЛОМ ОТДЕЛА РАССЛЕДОВАНИЙ</div></body></html>';
+}
+async function writeBack(code, type, content){
+  var html = buildDocHTML(code, type, content);
+  var fname = (code||"НОСИТЕЛЬ").replace(/[^A-Za-zА-Яа-я0-9\-]/g,"_") + "_РАСШИФРОВАНО.html";
+  var dlBtn = document.getElementById("dlBtn");
+  if(state.dir){
+    try{
+      if(state.dir.requestPermission){
+        var perm = await state.dir.requestPermission({ mode:"readwrite" });
+        if(perm !== "granted") throw new Error("no-permission");
+      }
+      var fh = await state.dir.getFileHandle(fname, { create:true });
+      var w  = await fh.createWritable();
+      await w.write(html); await w.close();
+      elOut.innerHTML += "\n\n<span class='ok'>► Расшифрованный файл записан на носитель:\n  "+fname+"\nОткройте его прямо с флешки.</span>";
+      return;
+    }catch(e){}
+  }
+  dlBtn.hidden = false;
+  dlBtn.onclick = function(){
+    var blob = new Blob([html], { type:"text/html" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = fname;
+    a.click(); setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+  };
+  elOut.innerHTML += "\n\n<span class='warn'>► Запись на носитель недоступна. Скачайте расшифрованный файл кнопкой ниже и скопируйте его на флешку.</span>";
+}
+document.getElementById("fbFile").addEventListener("change", async function(e){
+  var file = e.target.files[0]; if(!file) return;
+  resetMedia(); elFbB.hidden = false;
+  var raw = await file.text();
+  var p = parseKnt(raw);
+  if(!p.payload){ out("<span class='err'>Файл не распознан как носитель К.О.Н.Т.У.Р.</span>"); return; }
+  state.knt = p; state.dir = null;
+  out("<span class='ok'>НОСИТЕЛЬ ОПОЗНАН.\nКОД: "+(p.code||"—")+
+      "\nТИП: "+(p.type||"архив")+"\nДАННЫЕ ЗАШИФРОВАНЫ.\n► Введите шифр-ключ.</span>");
+  elPwB.hidden = false;
+});
+
+/* ===================== ЭКСПЕРИМЕНТЫ ===================== */
+var TARGET = {
+  eng:  "29047",   // инженерный код
+  cont: "10100",   // контуры К5..К1
+  freq: 19,        // частота, Гц
+  spec: "green",   // спектр
+  ang:  47         // угол излучателя
+};
+var panelUnlocked = false;
+var chosenSpectrum = null;
+var SPEC_NAMES = {violet:"фиолетовый",blue:"синий",green:"зелёный",
+  yellow:"жёлтый",amber:"янтарный",red:"красный"};
+
+function setCheck(key, done, value){
+  var ci = document.querySelector('#checklist .ci[data-k="'+key+'"]');
+  if(!ci) return;
+  ci.classList.toggle("done", !!done);
+  ci.classList.toggle("empty", !done);
+  ci.querySelector(".vl").textContent = value;
+}
+function curContours(){
+  var s = "";
+  [].forEach.call(document.querySelectorAll("#switches .sw"), function(sw){
+    s += sw.classList.contains("on") ? "1" : "0";
+  });
+  return s;
+}
+function refreshChecklist(){
+  if(!panelUnlocked) return;
+  setCheck("cont", true, curContours());
+  var f = document.getElementById("freqSlider").value;
+  setCheck("freq", true, f + " Гц");
+  setCheck("spec", true, chosenSpectrum ? SPEC_NAMES[chosenSpectrum] : "не выбран");
+  var a = document.getElementById("angSlider").value;
+  setCheck("ang", true, a + "°");
+}
+
+/* --- параметр 1: инженерный код --- */
+document.getElementById("engBtn").addEventListener("click", function(){
+  var o = document.getElementById("engOut");
+  var v = document.getElementById("engInput").value.replace(/\D/g,"");
+  if(!v){ o.innerHTML = "<span class='warn'>ВВЕДИТЕ ИНЖЕНЕРНЫЙ КОД.</span>"; return; }
+  o.innerHTML = "<span class='lbl'>ПРОВЕРКА КОДА...</span>";
+  setTimeout(function(){
+    if(v === TARGET.eng){
+      panelUnlocked = true;
+      document.getElementById("lockover").classList.add("hide");
+      document.getElementById("runBtn").disabled = false;
+      o.innerHTML = "<span class='ok'>КОД ПРИНЯТ. КАЛИБРОВОЧНЫЙ РЕЖИМ РАЗБЛОКИРОВАН.\nЗадайте параметры 2–5 и запустите стабилизацию.</span>";
+      setCheck("eng", true, TARGET.eng);
+      refreshChecklist();
+    } else {
+      o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\nПанель заблокирована. Сверьте порядок уровней по методичке К.О.Н.Т.У.Р.</span>";
+    }
+  }, 560);
+});
+document.getElementById("engInput").addEventListener("keydown", function(e){
+  if(e.key === "Enter") document.getElementById("engBtn").click();
+});
+
+/* --- параметр 2: контуры --- */
+document.getElementById("switches").addEventListener("click", function(e){
+  if(!panelUnlocked) return;
+  var sw = e.target.closest(".sw"); if(!sw) return;
+  sw.classList.toggle("on");
+  sw.querySelector(".state").textContent = sw.classList.contains("on") ? "1" : "0";
+  refreshChecklist();
+});
+
+/* --- параметр 3 и 5: ползунки --- */
+function bindSlider(sliderId, valId, key){
+  var sl = document.getElementById(sliderId);
+  var vl = document.getElementById(valId);
+  function upd(){
+    vl.textContent = sl.value;
+    if(key === "ang"){
+      var deg = parseInt(sl.value,10);
+      var rad = (deg - 90) * Math.PI/180;       // 0° = вверх
+      var x = 60 + 46*Math.cos(rad), y = 60 + 46*Math.sin(rad);
+      var n = document.getElementById("needle");
+      n.setAttribute("x2", x.toFixed(1));
+      n.setAttribute("y2", y.toFixed(1));
+    }
+    refreshChecklist();
+  }
+  sl.addEventListener("input", upd);
+  upd();
+  return sl;
+}
+var freqSlider = bindSlider("freqSlider","freqVal","freq");
+var angSlider  = bindSlider("angSlider","angVal","ang");
+
+document.querySelectorAll(".stepbtn").forEach(function(b){
+  b.addEventListener("click", function(){
+    if(!panelUnlocked) return;
+    var sl = b.dataset.step === "freq" ? freqSlider : angSlider;
+    var d  = parseInt(b.dataset.d,10);
+    var nv = Math.min(+sl.max, Math.max(+sl.min, parseInt(sl.value,10) + d));
+    sl.value = nv;
+    sl.dispatchEvent(new Event("input"));
+  });
+});
+
+/* --- параметр 4: спектр --- */
+document.getElementById("spectrum").addEventListener("click", function(e){
+  if(!panelUnlocked) return;
+  var sw = e.target.closest(".swatch"); if(!sw) return;
+  [].forEach.call(this.children, function(c){ c.classList.remove("sel"); });
+  sw.classList.add("sel");
+  chosenSpectrum = sw.dataset.s;
+  refreshChecklist();
+});
+
+/* --- запуск --- */
+document.getElementById("runBtn").addEventListener("click", function(){
+  var o = document.getElementById("runOut");
+  if(!panelUnlocked){
+    o.innerHTML = "<span class='warn'>ПАНЕЛЬ ЗАБЛОКИРОВАНА. Введите инженерный код.</span>";
+    return;
+  }
+  o.innerHTML = "<span class='lbl'>ЗАПУСК ПРОТОКОЛА СТАБИЛИЗАЦИИ...</span>";
+  var contOK = curContours() === TARGET.cont;
+  var freqOK = parseInt(freqSlider.value,10) === TARGET.freq;
+  var specOK = chosenSpectrum === TARGET.spec;
+  var angOK  = parseInt(angSlider.value,10) === TARGET.ang;
+  setTimeout(function(){
+    if(contOK && freqOK && specOK && angOK){
+      o.innerHTML = "<span class='ok big'>КАЛИБРОВКА ПОДТВЕРЖДЕНА.\nСОЧЛЕНЕНИЕ РАЗМЫКАЕТСЯ...\nФОРМИРОВАНИЕ ВЫХОДА — 100%</span>";
+      document.getElementById("fstat").textContent = "ВЫХОД ОТКРЫТ";
+      setTimeout(function(){ document.getElementById("portal").classList.add("show"); }, 1100);
+      return;
+    }
+    var msg = "<span class='err'>ОТКАЗ. ПОРТАЛ НЕ СФОРМИРОВАН.</span>\n<span class='lbl'>Калибровка неполна:</span>\n";
+    if(!contOK) msg += "<span class='warn'>► КОНТУРЫ: последовательность не стабилизирует Контур. Сверьте журнал и обратное правило.</span>\n";
+    if(!freqOK) msg += "<span class='warn'>► ЧАСТОТА: вне резонанса. Снимите значение с записи АСС.</span>\n";
+    if(!specOK) msg += "<span class='warn'>► СПЕКТР: не подавляет О-41. Сверьте фото калибровки.</span>\n";
+    if(!angOK)  msg += "<span class='warn'>► УГОЛ: излучатель не наведён в ядро. Сверьте схему дневника.</span>\n";
+    o.innerHTML = msg.replace(/\n$/,"");
+  }, 950);
+});
+document.getElementById("portalClose").addEventListener("click", function(){
+  document.getElementById("portal").classList.remove("show");
+});
+</script>
+</body>
+</html>
