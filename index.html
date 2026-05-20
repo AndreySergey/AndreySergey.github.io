@@ -73,6 +73,39 @@ nav button:hover{color:var(--phos);background:var(--panel2)}
 nav button.on{background-color:var(--phos);color:var(--bg);
   text-shadow:none;font-weight:600;}
 
+/* индикатор аномального фона */
+#anom{margin-top:9px;border:1px solid var(--line);background:var(--panel);
+  padding:7px 14px;display:flex;align-items:center;gap:14px}
+#anom.hit{animation:ahit .5s}
+@keyframes ahit{0%,100%{border-color:var(--line);background:var(--panel)}
+  25%{border-color:var(--red);background:#1c0f0d}}
+#anom .alab{font-size:10px;letter-spacing:.15em;color:var(--dim);flex:none}
+#anom .atrack{position:relative;flex:1;height:13px;
+  border:1px solid var(--line);background:var(--bg);overflow:visible}
+#anom .azones{position:absolute;inset:0;display:flex}
+#anom .azones span{flex:1}
+#anom .zg{background:rgba(99,236,155,.18)}
+#anom .zy{background:rgba(240,181,82,.20);
+  border-left:1px solid var(--line);border-right:1px solid var(--line)}
+#anom .zr{background:rgba(255,97,87,.20)}
+#anom .amark{position:absolute;top:-4px;bottom:-4px;left:0;width:3px;
+  margin-left:-1px;transition:left .55s cubic-bezier(.34,1.65,.5,1)}
+#anom .amark i{display:block;width:100%;height:100%;animation:ajit .3s infinite}
+@keyframes ajit{0%{transform:translate(0,0)}
+  20%{transform:translate(-1.5px,.4px)}
+  45%{transform:translate(1.3px,-.5px)}
+  70%{transform:translate(-.7px,.6px)}
+  100%{transform:translate(1.4px,-.2px)}}
+#anom.z-g .amark i{background:var(--phos);box-shadow:0 0 7px var(--phos)}
+#anom.z-y .amark i{background:var(--amber);box-shadow:0 0 7px var(--amber)}
+#anom.z-r .amark i{background:var(--red);box-shadow:0 0 9px var(--red);
+  animation-duration:.16s}
+#anom .astat{font-size:10px;letter-spacing:.12em;font-weight:600;
+  flex:none;width:104px;text-align:right}
+#anom.z-g .astat{color:var(--phos)}
+#anom.z-y .astat{color:var(--amber)}
+#anom.z-r .astat{color:var(--red)}
+
 .panel{display:none;border:1px solid var(--line);border-top:0;
   background:var(--panel);padding:24px 22px;}
 .panel.on{display:block;animation:fade .2s}
@@ -321,6 +354,15 @@ footer .a{color:var(--amber)}
     </div>
   </header>
 
+  <div id="anom" class="z-g">
+    <div class="alab">АНОМАЛЬНЫЙ ФОН</div>
+    <div class="atrack">
+      <div class="azones"><span class="zg"></span><span class="zy"></span><span class="zr"></span></div>
+      <div class="amark" id="anomMark"><i></i></div>
+    </div>
+    <div class="astat" id="anomStat">СТАБИЛЬНО</div>
+  </div>
+
   <nav id="nav">
     <button data-tab="media" class="on">НОСИТЕЛИ ДАННЫХ</button>
     <button data-tab="arhiv">АРХИВ</button>
@@ -426,7 +468,7 @@ footer .a{color:var(--amber)}
           <div class="dth">ПОСЛУЖНОЙ СПИСОК</div>
           <p>В систему К.О.Н.Т.У.Р. зачислен в 1995 г. До 1999 г. — оперативный резерв, далее переведён в Отдел расследований. Вёл объекты № 12, № 19, № 28, № 31: все закрыты, оперативные группы выведены без потерь.</p>
           <p>Назначение на Объект № 47 запросил лично, рапортом, вне очереди нагрузки — после того как с Объекта перестала выходить на связь исследовательская точка. Резолюция руководства: «инициатива удовлетворена; отмечена повторно».</p>
-          <p>Аттестационная характеристика: методичен, дотошен, наблюдателен. К процедуре придирчив. Склонен доводить подозрение до конца — иногда вопреки указаниям.</p>
+          <p>Аттестационная характеристика: методичен, дотошен, наблюдателен. К процедуре придирчив. Склонен доводить работу до конца — иногда вопреки указаниям.</p>
         </div>
       </div>
 
@@ -930,6 +972,23 @@ function refreshChecklist(){
   setCheck("ang", true, a + "°");
 }
 
+/* --- индикатор аномального фона --- */
+var anomaly = 0, ANOM_MAX = 5;
+function renderAnomaly(){
+  var anom = document.getElementById("anom");
+  document.getElementById("anomMark").style.left = (anomaly/ANOM_MAX*100) + "%";
+  var zone = anomaly <= 1 ? "g" : (anomaly <= 3 ? "y" : "r");
+  anom.classList.remove("z-g","z-y","z-r");
+  anom.classList.add("z-" + zone);
+  document.getElementById("anomStat").textContent =
+    zone === "g" ? "СТАБИЛЬНО" : (zone === "y" ? "НЕУСТОЙЧИВО" : "КРИТИЧНО");
+}
+function bumpAnomaly(){
+  if(anomaly < ANOM_MAX){ anomaly++; renderAnomaly(); }
+  var anom = document.getElementById("anom");
+  anom.classList.remove("hit"); void anom.offsetWidth; anom.classList.add("hit");
+}
+
 /* --- параметр 1: инженерный код --- */
 document.getElementById("engBtn").addEventListener("click", function(){
   var o = document.getElementById("engOut");
@@ -946,6 +1005,7 @@ document.getElementById("engBtn").addEventListener("click", function(){
       refreshChecklist();
     } else {
       o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\nПанель заблокирована. Сверьте порядок уровней по методичке К.О.Н.Т.У.Р.</span>";
+      bumpAnomaly();
     }
   }, 560);
 });
@@ -1025,6 +1085,7 @@ document.getElementById("runBtn").addEventListener("click", function(){
       setTimeout(function(){ document.getElementById("portal").classList.add("show"); }, 1100);
       return;
     }
+    bumpAnomaly();
     var msg = "<span class='err'>ОТКАЗ. ПОРТАЛ НЕ СФОРМИРОВАН.</span>\n<span class='lbl'>Калибровка неполна:</span>\n";
     if(!contOK) msg += "<span class='warn'>► КОНТУРЫ: последовательность не складывается в выход. Сверьте журнал и правило на УФ-стене.</span>\n";
     if(!freqOK) msg += "<span class='warn'>► ЧАСТОТА: вне резонанса. Снимите значение с записи АСС.</span>\n";
