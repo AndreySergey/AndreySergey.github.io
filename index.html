@@ -149,6 +149,28 @@ video{width:100%;border:1px solid var(--line);background:#000;display:block}
 .note{margin:0 14px 16px;font-size:12px;color:var(--dim);
   border-left:2px solid var(--dimmer);padding-left:12px;font-style:italic;}
 
+/* ---------- АРХИВ: ЗАМОК ---------- */
+.vault{border:1px solid var(--line);background:var(--bg);padding:40px 26px;
+  text-align:center;position:relative;overflow:hidden;}
+.vault::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(45deg,
+    rgba(99,236,155,0) 0 30px,rgba(99,236,155,.025) 30px 60px);
+  pointer-events:none;}
+.vault svg{display:block;margin:0 auto 14px;
+  filter:drop-shadow(0 0 8px rgba(99,236,155,.35));}
+.vault .vt{font-size:14px;letter-spacing:.22em;color:var(--bright);
+  font-weight:600;margin-bottom:8px;
+  text-shadow:0 0 10px rgba(99,236,155,.4);}
+.vault .vm{font-size:12px;color:var(--dim);max-width:380px;
+  margin:0 auto 18px;letter-spacing:.04em;}
+.vault .vform{max-width:420px;margin:0 auto;text-align:left}
+.vault .stripes{display:flex;justify-content:center;gap:5px;margin-top:22px}
+.vault .stripes span{width:7px;height:7px;background:var(--dimmer)}
+.vault .stripes span:nth-child(2){background:var(--amber);
+  box-shadow:0 0 6px var(--amber);}
+.vault .stripes span:nth-child(4){background:var(--red);
+  box-shadow:0 0 6px var(--red);animation:bl 1.6s steps(2) infinite;}
+
 /* ---------- ЭКСПЕРИМЕНТЫ / СТАБИЛИЗАТОР ---------- */
 .warnbar{border:1px solid var(--amber);background:rgba(240,181,82,.07);
   color:var(--amber);font-size:11.5px;padding:8px 12px;margin-bottom:16px;
@@ -345,33 +367,56 @@ footer .a{color:var(--amber)}
   <!-- ---------- АРХИВ ---------- -->
   <section class="panel" id="p-arhiv">
     <h2>АРХИВ // ЛИЧНЫЕ ДЕЛА</h2>
-    <p class="hint">Раздел кадрового архива. Доступ оперативной группы по запросу.</p>
-    <div class="dossier">
-      <div class="dh"><span>ЛИЧНОЕ ДЕЛО № К-47-013</span><span>ОТДЕЛ РАССЛЕДОВАНИЙ</span></div>
-      <div class="stamp">СЕКРЕТНО</div>
-      <div class="dbody">
-        <div class="photo">ИЗОБРАЖЕНИЕ<br>ПОВРЕЖДЕНО<br>ПОМЕХИ О-41</div>
-        <div class="fields">
-          <div class="frow"><span class="fk">ФАМИЛИЯ ИМЯ ОТЧЕСТВО</span><span class="fv">Орлов Михаил Андреевич</span></div>
-          <div class="frow"><span class="fk">ОТДЕЛ</span><span class="fv">Отдел расследований</span></div>
-          <div class="frow"><span class="fk">ДОЛЖНОСТЬ</span><span class="fv">следователь</span></div>
-          <div class="frow"><span class="fk">ПОЗЫВНОЙ</span><span class="fv">«ОРЁЛ»</span></div>
-          <div class="frow"><span class="fk">ИНДЕКС ДОПУСКА</span><span class="fv">47</span></div>
-          <div class="frow"><span class="fk">СЕМЕЙНОЕ ПОЛОЖЕНИЕ</span><span class="fv">женат, дочь</span></div>
-          <div class="frow"><span class="fk">ОБЪЕКТ НАЗНАЧЕНИЯ</span><span class="fv">№ 47, посёлок «Ковчег-3»</span></div>
-          <div class="frow"><span class="fk">СТАТУС</span><span class="fv alert">НЕ ВЫШЕЛ НА СВЯЗЬ</span></div>
+    <p class="hint">Раздел кадрового архива. Доступ оперативной группы по коду.</p>
+
+    <div class="vault" id="arhivLock">
+      <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#63ec9b" stroke-width="1.4">
+        <rect x="3.5" y="10" width="17" height="11.5" rx="0.5"/>
+        <path d="M7 10V6.5a5 5 0 0 1 10 0V10"/>
+        <circle cx="12" cy="15.5" r="1.4" fill="#63ec9b"/>
+        <line x1="12" y1="16.5" x2="12" y2="19"/>
+      </svg>
+      <div class="vt">ДОСТУП ОГРАНИЧЕН</div>
+      <div class="vm">Раздел личных дел закрыт. Введите код доступа архива К.О.Н.Т.У.Р.</div>
+      <div class="vform">
+        <div class="inputrow">
+          <label class="field"><span class="pr">КОД ►</span>
+            <input id="arhivPw" placeholder="код доступа" autocomplete="off" spellcheck="false"></label>
+          <button class="act" id="arhivBtn">ОТКРЫТЬ</button>
         </div>
+        <div class="console" id="arhivOut" style="min-height:46px"></div>
       </div>
-      <div class="callout">
-        <div class="ct">ПРОТОКОЛ ДЕШИФРОВКИ</div>
-        Личный шифр-ключ сотрудника формируется по стандарту К.О.Н.Т.У.Р.:
-        <b>позывной латиницей + индекс допуска</b>. Этим ключом расшифровываются
-        зашифрованные носители сотрудника в разделе «Носители данных».
-      </div>
-      <div class="note">
-        Служебная отметка [вложено вручную]: «Если вы это читаете — идите по
-        носителям, я оставил всё нужное по порядку. И не верьте тому, кто скажет,
-        что оказался здесь случайно. Случайных здесь нет. — О.»
+      <div class="stripes"><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+
+    <div id="arhivContent" hidden>
+      <div class="dossier">
+        <div class="dh"><span>ЛИЧНОЕ ДЕЛО № K-47-013</span><span>ОТДЕЛ РАССЛЕДОВАНИЙ</span></div>
+        <div class="stamp">СЕКРЕТНО</div>
+        <div class="dbody">
+          <div class="photo">ИЗОБРАЖЕНИЕ<br>ПОВРЕЖДЕНО<br>ПОМЕХИ О-41</div>
+          <div class="fields">
+            <div class="frow"><span class="fk">ФАМИЛИЯ ИМЯ ОТЧЕСТВО</span><span class="fv">Орлов Михаил Андреевич</span></div>
+            <div class="frow"><span class="fk">ОТДЕЛ</span><span class="fv">Отдел расследований</span></div>
+            <div class="frow"><span class="fk">ДОЛЖНОСТЬ</span><span class="fv">следователь</span></div>
+            <div class="frow"><span class="fk">ПОЗЫВНОЙ</span><span class="fv">«ОРЁЛ»</span></div>
+            <div class="frow"><span class="fk">ИНДЕКС ДОПУСКА</span><span class="fv">47</span></div>
+            <div class="frow"><span class="fk">СЕМЕЙНОЕ ПОЛОЖЕНИЕ</span><span class="fv">женат, дочь</span></div>
+            <div class="frow"><span class="fk">ОБЪЕКТ НАЗНАЧЕНИЯ</span><span class="fv">№ 47, посёлок «Ковчег-3»</span></div>
+            <div class="frow"><span class="fk">СТАТУС</span><span class="fv alert">НЕ ВЫШЕЛ НА СВЯЗЬ</span></div>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="ct">ПРОТОКОЛ ДЕШИФРОВКИ</div>
+          Личный шифр-ключ сотрудника формируется по стандарту К.О.Н.Т.У.Р.:
+          <b>позывной латиницей + индекс допуска</b>. Этим ключом расшифровываются
+          зашифрованные носители сотрудника в разделе «Носители данных».
+        </div>
+        <div class="note">
+          Служебная отметка [вложено вручную]: «Если вы это читаете — идите по
+          носителям, я оставил всё нужное по порядку. И не верьте тому, кто скажет,
+          что оказался здесь случайно. Случайных здесь нет. — О.»
+        </div>
       </div>
     </div>
   </section>
@@ -534,8 +579,6 @@ function enterTerminal(){
   applyHash();
 }
 (function runBoot(){
-  if(location.hash.toLowerCase().indexOf("arhiv")>-1
-     || location.hash.toLowerCase().indexOf("архив")>-1){ enterTerminal(); return; }
   var pre = document.getElementById("bootpre");
   bootLines.forEach(function(t,i){
     var d = document.createElement("div");
@@ -942,6 +985,36 @@ document.getElementById("runBtn").addEventListener("click", function(){
 });
 document.getElementById("portalClose").addEventListener("click", function(){
   document.getElementById("portal").classList.remove("show");
+});
+
+/* ===================== АРХИВ: ЗАМОК ===================== */
+var ARHIV_PW = "K-47-013";
+function canonArhiv(s){
+  /* Латинская K и кириллическая К графически неотличимы — нормализуем.
+     Заодно подменяем длинные тире/пробелы на дефис. */
+  return (s||"").trim().toUpperCase()
+    .replace(/К/g,"K")
+    .replace(/[\s–—]+/g,"-")
+    .replace(/-+/g,"-")
+    .replace(/^-|-$/g,"");
+}
+function unlockArhiv(){
+  var v = canonArhiv(document.getElementById("arhivPw").value);
+  var o = document.getElementById("arhivOut");
+  if(!v){ o.innerHTML = "<span class='warn'>ВВЕДИТЕ КОД ДОСТУПА.</span>"; return; }
+  o.innerHTML = "<span class='lbl'>ПРОВЕРКА КОДА ДОСТУПА...</span>";
+  setTimeout(function(){
+    if(v === ARHIV_PW){
+      document.getElementById("arhivLock").style.display = "none";
+      document.getElementById("arhivContent").hidden = false;
+    } else {
+      o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\nДоступ к архиву запрещён. Сверьтесь с QR-носителем кода.</span>";
+    }
+  }, 540);
+}
+document.getElementById("arhivBtn").addEventListener("click", unlockArhiv);
+document.getElementById("arhivPw").addEventListener("keydown", function(e){
+  if(e.key === "Enter") unlockArhiv();
 });
 </script>
 </body>
