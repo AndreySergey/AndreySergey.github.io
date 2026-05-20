@@ -331,6 +331,14 @@ footer .a{color:var(--amber)}
   <section class="panel on" id="p-media">
     <h2>НОСИТЕЛИ ДАННЫХ</h2>
     <p class="hint">Подключите флешку к компьютеру и нажмите кнопку. В окне браузера выберите подключённый носитель — терминал опознает его автоматически.</p>
+    <div class="callout">
+      <div class="ct">ПРОТОКОЛ ДЕШИФРОВКИ</div>
+      Носители К.О.Н.Т.У.Р. зашифрованы личным шифр-ключом агента. Ключ
+      собирается по стандарту: <b>позывной агента латиницей + индекс допуска</b>.
+      Позывной переводится в латиницу обычной транслитерацией (Ё → E). Сам
+      позывной и индекс допуска агента — в разделе «АРХИВ». Ключ принимается
+      в любой раскладке.
+    </div>
     <div class="inputrow">
       <button class="act" id="connectBtn">▸ ПОДКЛЮЧИТЬ НОСИТЕЛЬ</button>
       <button class="act ghost" id="resetBtn">СБРОС</button>
@@ -383,7 +391,7 @@ footer .a{color:var(--amber)}
         <line x1="12" y1="16.5" x2="12" y2="19"/>
       </svg>
       <div class="vt">ДОСТУП ОГРАНИЧЕН</div>
-      <div class="vm">Раздел личных дел закрыт. Введите код доступа архива К.О.Н.Т.У.Р. — он закодирован в QR на фоторамке.</div>
+      <div class="vm">Раздел личных дел закрыт. В архиве несколько дел — каждое открывается своим кодом доступа. Один из кодов закодирован в QR на фоторамке.</div>
       <div class="vform">
         <div class="inputrow">
           <label class="field"><span class="pr">КОД ►</span>
@@ -396,7 +404,8 @@ footer .a{color:var(--amber)}
     </div>
 
     <div id="arhivContent" hidden>
-      <div class="dossier">
+
+      <div class="dossier" id="dossierOrlov" hidden>
         <div class="dh"><span>ЛИЧНОЕ ДЕЛО № K7XP4M2R</span><span>ОТДЕЛ РАССЛЕДОВАНИЙ</span></div>
         <div class="stamp">СЕКРЕТНО</div>
         <div class="dbody">
@@ -421,48 +430,14 @@ footer .a{color:var(--amber)}
           <p>Назначение на Объект № 47 запросил лично, рапортом, вне очереди нагрузки — после того как с Объекта перестала выходить на связь исследовательская точка. Резолюция руководства: «инициатива удовлетворена; отмечена повторно».</p>
           <p>Аттестационная характеристика: методичен, дотошен, наблюдателен. К процедуре придирчив. Склонен доводить подозрение до конца — иногда вопреки указаниям.</p>
         </div>
-        <div class="dtext">
-          <div class="dth">ОСОБАЯ ОТМЕТКА</div>
-          <p>С приданным исследовательской точке мл. лаборантом Павловым Т. А. — отношения служебно-конфликтные. Орлов дважды подавал рапорт о несоответствии стажёра уровню допуска Объекта; оба рапорта отклонены вышестоящим руководством.</p>
-          <p>По итогам последней аттестации замечание вынесено самому Орлову: «допускает предвзятость в оценке младшего состава; рекомендовано воздержаться от личных характеристик».</p>
-        </div>
-        <div class="callout">
-          <div class="ct">ПРОТОКОЛ ДЕШИФРОВКИ</div>
-          Личный шифр-ключ сотрудника формируется по стандарту К.О.Н.Т.У.Р.:
-          <b>позывной латиницей + индекс допуска</b>. Этим ключом расшифровываются
-          зашифрованные носители сотрудника в разделе «Носители данных».
-        </div>
         <div class="note">
-          Служебная отметка [вложено вручную]: «Если вы это читаете — идите по
+          [вложено вручную, рукой агента]: «Если вы это читаете — идите по
           носителям, я оставил всё нужное по порядку. И не верьте тому, кто скажет,
           что оказался здесь случайно. Случайных здесь нет. — О.»
         </div>
       </div>
 
-      <div class="rule"></div>
-
-      <div class="vault" id="arhiv2Lock">
-        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#63ec9b" stroke-width="1.4">
-          <rect x="3.5" y="10" width="17" height="11.5" rx="0.5"/>
-          <path d="M7 10V6.5a5 5 0 0 1 10 0V10"/>
-          <circle cx="12" cy="15.5" r="1.4" fill="#63ec9b"/>
-          <line x1="12" y1="16.5" x2="12" y2="19"/>
-        </svg>
-        <div class="vt">ВТОРОЕ ЛИЧНОЕ ДЕЛО</div>
-        <div class="vm">В архиве есть ещё одно дело — приданного состава Объекта № 47. Закрыто отдельным кодом. Код — в записях агента Орлова.</div>
-        <div class="vform">
-          <div class="inputrow">
-            <label class="field"><span class="pr">КОД ►</span>
-              <input id="arhiv2Pw" placeholder="код доступа" autocomplete="off" spellcheck="false"></label>
-            <button class="act" id="arhiv2Btn">ОТКРЫТЬ</button>
-          </div>
-          <div class="console" id="arhiv2Out" style="min-height:46px"></div>
-        </div>
-        <div class="stripes"><span></span><span></span><span></span><span></span><span></span></div>
-      </div>
-
-      <div id="arhiv2Content" hidden>
-        <div class="dossier">
+      <div class="dossier" id="dossierPavlov" hidden>
           <div class="dh"><span>ЛИЧНОЕ ДЕЛО № D9HV3W8N</span><span>ПРИДАННЫЙ СОСТАВ</span></div>
           <div class="stamp">КОПИЯ</div>
           <div class="dbody">
@@ -494,8 +469,12 @@ footer .a{color:var(--amber)}
             затребовал сам. Возможно, я к нему несправедлив — мне так и записали.
             Прочтите и решайте сами, не по моему слову. — О.»
           </div>
-        </div>
       </div>
+
+      <div class="inputrow" style="margin-top:14px">
+        <button class="act ghost" id="arhivBack">◂ НАЗАД — ВВЕСТИ ДРУГОЙ КОД</button>
+      </div>
+
     </div>
   </section>
 
@@ -1076,36 +1055,37 @@ function canonCode(s){
   for(var i=0;i<t.length;i++) o += (HG[t[i]] || t[i]);
   return o;
 }
-function tryUnlock(inputId, outId, lockId, contentId, target, failMsg){
-  var v = canonCode(document.getElementById(inputId).value);
-  var o = document.getElementById(outId);
+function openDossier(which){
+  document.getElementById("arhivLock").style.display = "none";
+  document.getElementById("dossierOrlov").hidden  = (which !== "orlov");
+  document.getElementById("dossierPavlov").hidden = (which !== "pavlov");
+  document.getElementById("arhivContent").hidden  = false;
+}
+function unlockArhiv(){
+  var v = canonCode(document.getElementById("arhivPw").value);
+  var o = document.getElementById("arhivOut");
   if(!v){ o.innerHTML = "<span class='warn'>ВВЕДИТЕ КОД ДОСТУПА.</span>"; return; }
   o.innerHTML = "<span class='lbl'>ПРОВЕРКА КОДА ДОСТУПА...</span>";
   setTimeout(function(){
-    if(v === target){
-      document.getElementById(lockId).style.display = "none";
-      document.getElementById(contentId).hidden = false;
-    } else {
-      o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\n"+failMsg+"</span>";
-    }
+    if(v === ARHIV_PW){ o.innerHTML = ""; openDossier("orlov"); }
+    else if(v === ASSIST_PW){ o.innerHTML = ""; openDossier("pavlov"); }
+    else { o.innerHTML = "<span class='err'>КОД ОТКЛОНЁН.\n"+
+      "Код не подходит ни к одному личному делу архива.</span>"; }
   }, 540);
 }
-function unlockArhiv(){
-  tryUnlock("arhivPw","arhivOut","arhivLock","arhivContent",ARHIV_PW,
-    "Доступ к архиву запрещён. Сверьтесь с QR-носителем кода.");
-}
-function unlockAssist(){
-  tryUnlock("arhiv2Pw","arhiv2Out","arhiv2Lock","arhiv2Content",ASSIST_PW,
-    "Это дело закрыто отдельным кодом. См. записи агента Орлова.");
+function arhivBack(){
+  document.getElementById("arhivContent").hidden = true;
+  document.getElementById("dossierOrlov").hidden = true;
+  document.getElementById("dossierPavlov").hidden = true;
+  document.getElementById("arhivPw").value = "";
+  document.getElementById("arhivOut").innerHTML = "";
+  document.getElementById("arhivLock").style.display = "";
 }
 document.getElementById("arhivBtn").addEventListener("click", unlockArhiv);
 document.getElementById("arhivPw").addEventListener("keydown", function(e){
   if(e.key === "Enter") unlockArhiv();
 });
-document.getElementById("arhiv2Btn").addEventListener("click", unlockAssist);
-document.getElementById("arhiv2Pw").addEventListener("keydown", function(e){
-  if(e.key === "Enter") unlockAssist();
-});
+document.getElementById("arhivBack").addEventListener("click", arhivBack);
 </script>
 </body>
 </html>
