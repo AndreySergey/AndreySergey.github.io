@@ -170,6 +170,8 @@ video{width:100%;border:1px solid var(--line);background:#000;display:block}
 .photo::after{content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,transparent 38%,rgba(99,236,155,.07) 50%,transparent 62%);
   animation:band 4s linear infinite;}
+.photo img{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;display:block;filter:grayscale(.55) brightness(.9);}
 .fields{flex:1;min-width:220px}
 .frow{display:flex;border-bottom:1px dotted var(--dimmer);padding:5px 0;font-size:12.5px}
 .frow .fk{width:46%;color:var(--dim);letter-spacing:.04em}
@@ -449,7 +451,7 @@ footer .a{color:var(--amber)}
         <div class="dh"><span>ЛИЧНОЕ ДЕЛО № K7XP4M2R</span><span>ОТДЕЛ РАССЛЕДОВАНИЙ</span></div>
         <div class="stamp">СЕКРЕТНО</div>
         <div class="dbody">
-          <div class="photo">ИЗОБРАЖЕНИЕ<br>ПОВРЕЖДЕНО<br>ПОМЕХИ О-41</div>
+          <div class="photo"><img src="orlov.png" alt="Орлов Михаил Андреевич"></div>
           <div class="fields">
             <div class="frow"><span class="fk">ФАМИЛИЯ ИМЯ ОТЧЕСТВО</span><span class="fv">Орлов Михаил Андреевич</span></div>
             <div class="frow"><span class="fk">ГОД И МЕСТО РОЖДЕНИЯ</span><span class="fv">1971 г., пос. зак. типа «Ковчег-1»</span></div>
@@ -476,7 +478,7 @@ footer .a{color:var(--amber)}
           <div class="dh"><span>ЛИЧНОЕ ДЕЛО № D9HV3W8N</span><span>ПРИДАННЫЙ СОСТАВ</span></div>
           <div class="stamp">КОПИЯ</div>
           <div class="dbody">
-            <div class="photo">ФОТО<br>В ДЕЛО<br>НЕ ПРИОБЩЕНО</div>
+            <div class="photo"><img src="timur.png" alt="Павлов Тимур Артёмович"></div>
             <div class="fields">
               <div class="frow"><span class="fk">ФАМИЛИЯ ИМЯ ОТЧЕСТВО</span><span class="fv">Павлов Тимур Артёмович</span></div>
               <div class="frow"><span class="fk">ГОД РОЖДЕНИЯ</span><span class="fv">1994 г.</span></div>
@@ -597,7 +599,7 @@ footer .a{color:var(--amber)}
       <!-- параметр 5: угол -->
       <div class="param">
         <div class="ph"><span class="pname">УГОЛ ИЗЛУЧАТЕЛЯ</span><span class="pidx">ПАРАМЕТР 5 / 5</span></div>
-        <div class="pdesc">Излучатель наводится в ядро Объекта. Угол по шкале равен номеру Объекта.</div>
+        <div class="pdesc">Излучатель наводится в ядро Объекта. Угол наведения — из расчётного листа (печатный отчёт).</div>
         <div class="anglebox">
           <svg width="120" height="120" viewBox="0 0 120 120">
             <circle cx="60" cy="60" r="52" fill="none" stroke="#173a26" stroke-width="1"/>
@@ -941,7 +943,7 @@ var TARGET = {
   cont: "10100",   // контуры К5..К1
   freq: 19,        // частота, Гц
   spec: "green",   // спектр
-  ang:  47         // угол излучателя
+  ang:  30         // угол излучателя — расчётный лист наведения
 };
 var panelUnlocked = false;
 var chosenSpectrum = null;
@@ -1090,7 +1092,7 @@ document.getElementById("runBtn").addEventListener("click", function(){
     if(!contOK) msg += "<span class='warn'>► КОНТУРЫ: последовательность не складывается в выход. Сверьте журнал и правило на УФ-стене.</span>\n";
     if(!freqOK) msg += "<span class='warn'>► ЧАСТОТА: вне резонанса. Снимите значение с записи АСС.</span>\n";
     if(!specOK) msg += "<span class='warn'>► СПЕКТР: не подавляет О-41. Сверьте фото калибровки.</span>\n";
-    if(!angOK)  msg += "<span class='warn'>► УГОЛ: излучатель не наведён в ядро. Угол по шкале = номер Объекта.</span>\n";
+    if(!angOK)  msg += "<span class='warn'>► УГОЛ: излучатель не наведён в ядро. Сверьтесь с расчётным листом наведения.</span>\n";
     o.innerHTML = msg.replace(/\n$/,"");
   }, 950);
 });
