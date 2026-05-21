@@ -73,7 +73,7 @@ nav button:hover{color:var(--phos);background:var(--panel2)}
 nav button.on{background-color:var(--phos);color:var(--bg);
   text-shadow:none;font-weight:600;}
 
-/* индикатор аномального фона */
+/* индикатор БАС-М (биоактивный фон) */
 #anom{margin-top:9px;border:1px solid var(--line);background:var(--panel);
   padding:7px 14px;display:flex;align-items:center;gap:14px}
 #anom.hit{animation:ahit .5s}
@@ -152,7 +152,6 @@ button.act.ghost:hover{color:var(--phos);background:var(--panel2)}
   font-size:11px;color:var(--amber);letter-spacing:.1em;}
 .recdoc pre{padding:16px;font-size:12.5px;color:var(--bright);
   white-space:pre-wrap;max-height:340px;overflow:auto;line-height:1.6;}
-video{width:100%;border:1px solid var(--line);background:#000;display:block}
 
 .dossier{border:1px solid var(--line);background:var(--bg);position:relative}
 .dossier .dh{display:flex;justify-content:space-between;align-items:baseline;
@@ -168,9 +167,6 @@ video{width:100%;border:1px solid var(--line);background:#000;display:block}
   display:flex;align-items:center;justify-content:center;text-align:center;
   font-size:9px;color:var(--dimmer);padding:6px;position:relative;overflow:hidden;
   z-index:92;} /* выше #crt — снимает с фото тёмные CRT-полосы развёртки */
-.photo::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,transparent 38%,rgba(99,236,155,.07) 50%,transparent 62%);
-  animation:band 4s linear infinite;}
 .photo img{position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;display:block;filter:grayscale(.55) brightness(.9);}
 .fields{flex:1;min-width:220px}
@@ -320,6 +316,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:24px;border:0;
 footer{margin-top:14px;display:flex;justify-content:space-between;
   flex-wrap:wrap;gap:8px;font-size:10px;color:var(--dimmer);letter-spacing:.1em;}
 footer .a{color:var(--amber)}
+footer .devise{flex-basis:100%;text-align:center;color:var(--dim);
+  letter-spacing:.13em;border-top:1px solid var(--dimmer);
+  padding-top:8px;margin-top:2px;}
 @media(max-width:560px){
   .htext h1{font-size:14px;letter-spacing:.28em}
   .hstat{display:none}
@@ -354,11 +353,12 @@ footer .a{color:var(--amber)}
       <div class="rec">ЗАПИСЬ СЕАНСА</div>
       <div>ОБЪЕКТ <b>№ 47</b></div>
       <div>УРОВЕНЬ <b>КОНТУР-1</b></div>
+      <div>ПРОТОКОЛ <b>ЭТАП 5/6</b></div>
     </div>
   </header>
 
   <div id="anom" class="z-g">
-    <div class="alab">АНОМАЛЬНЫЙ ФОН</div>
+    <div class="alab">БАС-М · БИОАКТИВНЫЙ ФОН</div>
     <div class="atrack">
       <div class="azones"><span class="zg"></span><span class="zy"></span><span class="zr"></span></div>
       <div class="amark" id="anomMark"><i></i></div>
@@ -407,11 +407,6 @@ footer .a{color:var(--amber)}
       <div class="inputrow" style="margin-top:10px">
         <button class="act ghost" id="dlBtn" hidden>СКАЧАТЬ РАСШИФРОВАННЫЙ ФАЙЛ</button>
       </div>
-    </div>
-
-    <div id="vidBlock" hidden>
-      <div class="rule"></div>
-      <video id="accVideo" controls playsinline></video>
     </div>
 
     <div id="fbBlock" hidden>
@@ -571,7 +566,7 @@ footer .a{color:var(--amber)}
       <!-- параметр 3: частота -->
       <div class="param">
         <div class="ph"><span class="pname">ЧАСТОТА РЕЗОНАНСА</span><span class="pidx">ПАРАМЕТР 3 / 5</span></div>
-        <div class="pdesc">Стабилизатор должен войти в резонанс. Значение частоты — на записи АСС.</div>
+        <div class="pdesc">Стабилизатор должен войти в резонанс. Частоту вычисляют по листу замера резонанса (осциллограммы АСС).</div>
         <div class="dialrow">
           <div class="dialread"><span id="freqVal">0</span><span class="u">Гц</span></div>
           <div class="sliderwrap">
@@ -640,6 +635,7 @@ footer .a{color:var(--amber)}
   <footer>
     <span>ТЕРМИНАЛ К.О.Н.Т.У.Р. v3.1 / ОТДЕЛ РАССЛЕДОВАНИЙ</span>
     <span id="fstat" class="a">АНОМАЛЬНАЯ АКТИВНОСТЬ — ПОВЫШЕННАЯ</span>
+    <div class="devise">СОБЛЮДЕНИЕ РЕГЛАМЕНТА — ЗАЛОГ ВАШЕЙ БЕЗОПАСНОСТИ И УСТОЙЧИВОСТИ СИСТЕМЫ В ЦЕЛОМ</div>
   </footer>
 </div>
 
@@ -659,12 +655,22 @@ var bootLines = [
   "————————————————————————————————",
   "> инициализация ядра ............ ОК",
   "> носители ввода/вывода ......... ОК",
+  "> приёмник БАС-М ................ ОК",
   "> канал связи с архивом ......... НЕСТАБИЛЬНО",
   "> привязка к Объекту № 47 ....... КОНТУР-1",
   "> Стабилизатор контура .......... ОЖИДАНИЕ КАЛИБРОВКИ",
   "————————————————————————————————",
+  "ПРОТОКОЛ ИЗУЧЕНИЯ ОБЪЕКТА:",
+  "  1 обнаружение ................. ЗАВЕРШЁН",
+  "  2 трансфер .................... ЗАВЕРШЁН",
+  "  3 локализация ................. ЗАВЕРШЁН",
+  "  4 начальное изучение .......... ЗАВЕРШЁН",
+  "  5 продвинутое изучение ........ ИДЁТ ◂",
+  "  6 решение ..................... ОЖИДАНИЕ",
+  "————————————————————————————————",
   "ТЕРМИНАЛ ОТДЕЛА РАССЛЕДОВАНИЙ",
-  "доступ оперативной группы разрешён"
+  "доступ оперативной группы разрешён",
+  "СОБЛЮДЕНИЕ РЕГЛАМЕНТА — ЗАЛОГ ВАШЕЙ БЕЗОПАСНОСТИ И УСТОЙЧИВОСТИ СИСТЕМЫ В ЦЕЛОМ"
 ];
 var booted = false;
 function enterTerminal(){
@@ -679,6 +685,7 @@ function enterTerminal(){
     var d = document.createElement("div");
     d.className = "ln"; d.textContent = t;
     d.style.animationDelay = (i*0.22)+"s";
+    if(t.indexOf("◂") > -1) d.style.color = "#f0b552";   // текущий этап
     pre.appendChild(d);
   });
   var e = document.createElement("div");
@@ -762,17 +769,14 @@ var state = { dir:null, knt:null };
 var elOut  = document.getElementById("mediaOut");
 var elPwB  = document.getElementById("pwBlock");
 var elDocB = document.getElementById("docBlock");
-var elVidB = document.getElementById("vidBlock");
 var elFbB  = document.getElementById("fbBlock");
 
 function resetMedia(){
   state = { dir:null, knt:null };
   elOut.innerHTML = "";
-  elPwB.hidden = elDocB.hidden = elVidB.hidden = true;
+  elPwB.hidden = elDocB.hidden = true;
   document.getElementById("pwInput").value = "";
   document.getElementById("dlBtn").hidden = true;
-  var v = document.getElementById("accVideo");
-  if(v.src){ try{URL.revokeObjectURL(v.src);}catch(e){} v.removeAttribute("src"); }
 }
 document.getElementById("resetBtn").addEventListener("click", resetMedia);
 function out(html){ elOut.innerHTML = html; }
@@ -802,18 +806,16 @@ document.getElementById("connectBtn").addEventListener("click", async function()
 });
 
 async function scanDir(dir){
-  var knt=[], media=[], other=[];
+  var knt=[], other=[];
   try{
     for await (const entry of dir.values()){
       if(entry.kind !== "file") continue;
       var low = entry.name.toLowerCase();
       if(low.endsWith(".knt")) knt.push(entry);
-      else if(/\.(mp4|webm|mov|m4v|avi)$/.test(low)) media.push(entry);
       else other.push(entry.name);
     }
   }catch(e){ out("<span class='err'>ОШИБКА ЧТЕНИЯ НОСИТЕЛЯ.</span>"); return; }
   if(knt.length){ await loadKnt(knt[0]); }
-  else if(media.length){ await loadMedia(media[0]); }
   else { showForeign(other); }
 }
 
@@ -835,13 +837,6 @@ async function loadKnt(handle){
     "СОСТОЯНИЕ: ДАННЫЕ ЗАШИФРОВАНЫ.\n"+
     "► Введите личный шифр-ключ агента для расшифровки.");
   elPwB.hidden = false;
-}
-async function loadMedia(handle){
-  var file = await handle.getFile();
-  out("<span class='ok'>НОСИТЕЛЬ ОПОЗНАН.\nОбнаружена видеозапись автономной системы съёмки (АСС).\n► Воспроизведение авторизовано.</span>");
-  var v = document.getElementById("accVideo");
-  v.src = URL.createObjectURL(file);
-  elVidB.hidden = false;
 }
 function showForeign(names){
   var html = "<span class='warn'>ПОСТОРОННИЙ НОСИТЕЛЬ.\nДанные К.О.Н.Т.У.Р. на устройстве не обнаружены.</span>";
@@ -898,7 +893,8 @@ function buildDocHTML(code, type, content){
     '</style></head><body><div class="h"><b>К.О.Н.Т.У.Р. // ВОССТАНОВЛЕННЫЙ ДОКУМЕНТ</b>'+
     '<div>НОСИТЕЛЬ: '+code+' &nbsp;|&nbsp; ТИП: '+(type||"архив")+
     ' &nbsp;|&nbsp; ОБЪЕКТ № 47</div></div><pre>'+esc+'</pre>'+
-    '<div class="f">РАСШИФРОВАНО ТЕРМИНАЛОМ ОТДЕЛА РАССЛЕДОВАНИЙ</div></body></html>';
+    '<div class="f">РАСШИФРОВАНО ТЕРМИНАЛОМ ОТДЕЛА РАССЛЕДОВАНИЙ<br>'+
+    'СОБЛЮДЕНИЕ РЕГЛАМЕНТА — ЗАЛОГ ВАШЕЙ БЕЗОПАСНОСТИ И УСТОЙЧИВОСТИ СИСТЕМЫ В ЦЕЛОМ</div></body></html>';
 }
 async function writeBack(code, type, content){
   var html = buildDocHTML(code, type, content);
@@ -975,7 +971,7 @@ function refreshChecklist(){
   setCheck("ang", true, a + "°");
 }
 
-/* --- индикатор аномального фона --- */
+/* --- индикатор БАС-М (биоактивный фон) --- */
 var anomaly = 0, ANOM_MAX = 5;
 function renderAnomaly(){
   var anom = document.getElementById("anom");
@@ -1091,7 +1087,7 @@ document.getElementById("runBtn").addEventListener("click", function(){
     bumpAnomaly();
     var msg = "<span class='err'>ОТКАЗ. ПОРТАЛ НЕ СФОРМИРОВАН.</span>\n<span class='lbl'>Калибровка неполна:</span>\n";
     if(!contOK) msg += "<span class='warn'>► КОНТУРЫ: последовательность не складывается в выход. Сверьте журнал и правило на УФ-стене.</span>\n";
-    if(!freqOK) msg += "<span class='warn'>► ЧАСТОТА: вне резонанса. Снимите значение с записи АСС.</span>\n";
+    if(!freqOK) msg += "<span class='warn'>► ЧАСТОТА: вне резонанса. Сверьтесь с листом замера резонанса (осциллограммы АСС).</span>\n";
     if(!specOK) msg += "<span class='warn'>► СПЕКТР: не подавляет О-41. Сверьте фото калибровки.</span>\n";
     if(!angOK)  msg += "<span class='warn'>► УГОЛ: излучатель не наведён в ядро. Сверьтесь с расчётным листом наведения.</span>\n";
     o.innerHTML = msg.replace(/\n$/,"");
