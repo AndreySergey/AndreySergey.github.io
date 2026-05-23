@@ -292,10 +292,22 @@ input[type=range]::-moz-range-thumb{width:14px;height:24px;border:0;
 .swatch .slabel{font-size:10px;color:var(--dim);letter-spacing:.04em;text-align:center}
 .swatch.sel .slabel{color:var(--bright)}
 
+/* --- индикатор маршрута портала --- */
+.destbox{margin-top:14px;padding:10px 14px;border:1px dashed #2a4533;
+  background:rgba(20,40,28,.35);display:flex;justify-content:space-between;
+  align-items:center;letter-spacing:.08em;font-size:12px;}
+.destbox .dlbl{color:var(--dim)}
+.destbox .dval{color:var(--dim)}
+.destbox.home{border-color:var(--phos);background:rgba(46,120,72,.18)}
+.destbox.home .dval{color:var(--bright);text-shadow:0 0 8px rgba(99,236,155,.5)}
+.destbox.deep{border-color:#a86b3d;background:rgba(80,40,15,.28)}
+.destbox.deep .dval{color:#f0b552;text-shadow:0 0 8px rgba(240,181,82,.45)}
+
 #portal{display:none;position:fixed;inset:0;z-index:95;background:rgba(7,10,8,.93);
   align-items:center;justify-content:center;flex-direction:column;text-align:center;
   padding:30px;}
 #portal.show{display:flex;animation:fade .4s}
+#portal.deep{background:rgba(8,5,4,.96)}
 .pring{width:230px;height:230px;border-radius:50%;border:2px solid var(--phos);
   box-shadow:0 0 60px rgba(99,236,155,.55),inset 0 0 70px rgba(99,236,155,.4);
   display:flex;align-items:center;justify-content:center;
@@ -307,9 +319,19 @@ input[type=range]::-moz-range-thumb{width:14px;height:24px;border:0;
 .pring span{font-size:11px;letter-spacing:.2em;color:var(--bright);z-index:2}
 @keyframes pulse{50%{transform:scale(1.06);
   box-shadow:0 0 90px rgba(99,236,155,.8),inset 0 0 90px rgba(99,236,155,.55)}}
+@keyframes pulseDeep{50%{transform:scale(1.06);
+  box-shadow:0 0 90px rgba(240,181,82,.7),inset 0 0 90px rgba(240,181,82,.45)}}
+#portal.deep .pring{border-color:#f0b552;
+  box-shadow:0 0 60px rgba(240,181,82,.45),inset 0 0 70px rgba(240,181,82,.32);
+  animation:pulseDeep 2.6s ease-in-out infinite;}
+#portal.deep .pring::before{border-color:#f0b552;opacity:.45}
+#portal.deep .pring::after{border-color:#d9695f;opacity:.7}
+#portal.deep .pring span{color:#f0b552}
 #portal h3{margin-top:30px;font-size:20px;letter-spacing:.22em;color:var(--bright);
   text-shadow:0 0 16px rgba(99,236,155,.6);}
+#portal.deep h3{color:#f0b552;text-shadow:0 0 16px rgba(240,181,82,.55)}
 #portal p{margin-top:12px;font-size:13px;color:var(--phos);max-width:440px}
+#portal.deep p{color:#caa377}
 #portal small{margin-top:20px;color:var(--dim);font-size:11px;
   letter-spacing:.1em;cursor:pointer;}
 
@@ -520,10 +542,10 @@ footer .devise{flex-basis:100%;text-align:center;color:var(--dim);
     <!-- чек-лист -->
     <div class="checklist" id="checklist">
       <div class="ci empty" data-k="eng"><div class="box">✓</div><div class="nm">1 · ИНЖЕНЕРНЫЙ КОД</div><div class="vl">— — — — —</div></div>
-      <div class="ci empty" data-k="cont"><div class="box">✓</div><div class="nm">2 · КОНТУРЫ К1–К5</div><div class="vl">заблокировано</div></div>
-      <div class="ci empty" data-k="freq"><div class="box">✓</div><div class="nm">3 · ЧАСТОТА РЕЗОНАНСА</div><div class="vl">заблокировано</div></div>
-      <div class="ci empty" data-k="spec"><div class="box">✓</div><div class="nm">4 · СПЕКТР</div><div class="vl">заблокировано</div></div>
-      <div class="ci empty" data-k="ang"><div class="box">✓</div><div class="nm">5 · УГОЛ ИЗЛУЧАТЕЛЯ</div><div class="vl">заблокировано</div></div>
+      <div class="ci empty" data-k="freq"><div class="box">✓</div><div class="nm">2 · ЧАСТОТА РЕЗОНАНСА</div><div class="vl">заблокировано</div></div>
+      <div class="ci empty" data-k="spec"><div class="box">✓</div><div class="nm">3 · СПЕКТР</div><div class="vl">заблокировано</div></div>
+      <div class="ci empty" data-k="ang"><div class="box">✓</div><div class="nm">4 · УГОЛ ИЗЛУЧАТЕЛЯ</div><div class="vl">заблокировано</div></div>
+      <div class="ci empty" data-k="cont"><div class="box">✓</div><div class="nm">5 · КОНТУРЫ К1–К5 · МАРШРУТ</div><div class="vl">заблокировано</div></div>
     </div>
 
     <!-- параметр 1: инженерный код -->
@@ -550,22 +572,9 @@ footer .devise{flex-basis:100%;text-align:center;color:var(--dim);
         </div>
       </div>
 
-      <!-- параметр 2: контуры -->
+      <!-- параметр 2: частота -->
       <div class="param">
-        <div class="ph"><span class="pname">КОНТУРЫ К1–К5</span><span class="pidx">ПАРАМЕТР 2 / 5</span></div>
-        <div class="pdesc">Последовательность контуров выхода, тумблеры в порядке К5 → К1.</div>
-        <div class="switches" id="switches">
-          <div class="sw" data-c="5"><div class="swlbl">К5</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
-          <div class="sw" data-c="4"><div class="swlbl">К4</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
-          <div class="sw" data-c="3"><div class="swlbl">К3</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
-          <div class="sw" data-c="2"><div class="swlbl">К2</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
-          <div class="sw" data-c="1"><div class="swlbl">К1</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
-        </div>
-      </div>
-
-      <!-- параметр 3: частота -->
-      <div class="param">
-        <div class="ph"><span class="pname">ЧАСТОТА РЕЗОНАНСА</span><span class="pidx">ПАРАМЕТР 3 / 5</span></div>
+        <div class="ph"><span class="pname">ЧАСТОТА РЕЗОНАНСА</span><span class="pidx">ПАРАМЕТР 2 / 5</span></div>
         <div class="pdesc">Стабилизатор должен войти в резонанс. Частоту вычисляют по листу замера резонанса (осциллограммы АСС).</div>
         <div class="dialrow">
           <div class="dialread"><span id="freqVal">0</span><span class="u">Гц</span></div>
@@ -578,9 +587,9 @@ footer .devise{flex-basis:100%;text-align:center;color:var(--dim);
         <div class="ticks"><span>0</span><span>15</span><span>30</span><span>45</span><span>60 Гц</span></div>
       </div>
 
-      <!-- параметр 4: спектр -->
+      <!-- параметр 3: спектр -->
       <div class="param">
-        <div class="ph"><span class="pname">СПЕКТР</span><span class="pidx">ПАРАМЕТР 4 / 5</span></div>
+        <div class="ph"><span class="pname">СПЕКТР</span><span class="pidx">ПАРАМЕТР 3 / 5</span></div>
         <div class="pdesc">Узкий участок спектра, подавляющий О-41. Цвет — на фото калибровки.</div>
         <div class="spectrum" id="spectrum">
           <div class="swatch" data-s="violet"><div class="lamp" style="background:#7d4bd1"></div><div class="slabel">ФИОЛЕТОВЫЙ · 405 нм</div></div>
@@ -592,9 +601,9 @@ footer .devise{flex-basis:100%;text-align:center;color:var(--dim);
         </div>
       </div>
 
-      <!-- параметр 5: угол -->
+      <!-- параметр 4: угол -->
       <div class="param">
-        <div class="ph"><span class="pname">УГОЛ ИЗЛУЧАТЕЛЯ</span><span class="pidx">ПАРАМЕТР 5 / 5</span></div>
+        <div class="ph"><span class="pname">УГОЛ ИЗЛУЧАТЕЛЯ</span><span class="pidx">ПАРАМЕТР 4 / 5</span></div>
         <div class="pdesc">Излучатель наводится в ядро Объекта. Угол наведения — из расчётного листа (печатный отчёт).</div>
         <div class="anglebox">
           <svg width="120" height="120" viewBox="0 0 120 120">
@@ -624,6 +633,25 @@ footer .devise{flex-basis:100%;text-align:center;color:var(--dim);
           </div>
         </div>
       </div>
+
+      <!-- параметр 5: контуры — выбор маршрута портала -->
+      <div class="param">
+        <div class="ph"><span class="pname">КОНТУРЫ К1–К5 · МАРШРУТ ПОРТАЛА</span><span class="pidx">ПАРАМЕТР 5 / 5</span></div>
+        <div class="pdesc">Последовательность контуров выхода, тумблеры в порядке К5 → К1. Эта последовательность задаёт, <b>куда</b> пробьётся портал.<br>
+          • <b>Зеркало сочленения</b> (правило с УФ-стены) — выход <b>наружу</b>, в Контур-0 (домой).<br>
+          • <b>Протокол сочленения</b> (как в лабораторном журнале) — спуск <b>вглубь</b>, в Контур-2 (туда ушёл Орлов).</div>
+        <div class="switches" id="switches">
+          <div class="sw" data-c="5"><div class="swlbl">К5</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+          <div class="sw" data-c="4"><div class="swlbl">К4</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+          <div class="sw" data-c="3"><div class="swlbl">К3</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+          <div class="sw" data-c="2"><div class="swlbl">К2</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+          <div class="sw" data-c="1"><div class="swlbl">К1</div><div class="track"><div class="knob"></div><span class="mk t">1</span><span class="mk b">0</span></div><div class="state">0</div></div>
+        </div>
+        <div class="destbox" id="destBox">
+          <div class="dlbl">ПУНКТ НАЗНАЧЕНИЯ</div>
+          <div class="dval" id="destVal">маршрут не задан</div>
+        </div>
+      </div>
     </div>
 
     <div class="inputrow" style="margin-top:6px">
@@ -640,9 +668,9 @@ footer .devise{flex-basis:100%;text-align:center;color:var(--dim);
 </div>
 
 <div id="portal">
-  <div class="pring"><span>ВЫХОД</span></div>
-  <h3>ПОРТАЛ ПРОБИТ</h3>
-  <p>Калибровка принята. Запечатанная дверь лаборатории раскрылась порталом. Идите к ней и покиньте Объект.</p>
+  <div class="pring"><span id="portalRing">ВЫХОД</span></div>
+  <h3 id="portalH">ПОРТАЛ ПРОБИТ</h3>
+  <p id="portalT">Калибровка принята. Запечатанная дверь лаборатории раскрылась порталом. Идите к ней и покиньте Объект.</p>
   <small id="portalClose">[ свернуть ]</small>
 </div>
 
@@ -937,10 +965,12 @@ document.getElementById("fbFile").addEventListener("change", async function(e){
 /* ===================== ЭКСПЕРИМЕНТЫ ===================== */
 var TARGET = {
   eng:  "29047",   // инженерный код
-  cont: "10100",   // контуры К5..К1
   freq: 19,        // частота, Гц
   spec: "green",   // спектр
-  ang:  30         // угол излучателя — расчётный лист наведения
+  ang:  30,        // угол излучателя — расчётный лист наведения
+  // контуры (К5..К1) — выбор маршрута портала; ОБА значения рабочие (карта §2.12)
+  contHome: "10100",  // зеркало сочленения — выход домой, Контур-0
+  contDeep: "11010"   // протокол сочленения — за Орловым, Контур-2
 };
 var panelUnlocked = false;
 var chosenSpectrum = null;
@@ -961,14 +991,42 @@ function curContours(){
   });
   return s;
 }
+function routeOf(cont){
+  if(cont === TARGET.contHome) return "home";
+  if(cont === TARGET.contDeep) return "deep";
+  return null;
+}
+function refreshDestination(){
+  var box = document.getElementById("destBox");
+  var val = document.getElementById("destVal");
+  if(!box || !val) return;
+  box.classList.remove("home","deep");
+  var c = curContours();
+  var r = routeOf(c);
+  if(r === "home"){
+    box.classList.add("home");
+    val.textContent = "КОНТУР-0 · выход домой (зеркало сочленения)";
+  } else if(r === "deep"){
+    box.classList.add("deep");
+    val.textContent = "КОНТУР-2 · за Орловым, вглубь (протокол сочленения)";
+  } else {
+    val.textContent = "маршрут не задан — контуры не складываются в выход";
+  }
+}
 function refreshChecklist(){
   if(!panelUnlocked) return;
-  setCheck("cont", true, curContours());
   var f = document.getElementById("freqSlider").value;
   setCheck("freq", true, f + " Гц");
   setCheck("spec", true, chosenSpectrum ? SPEC_NAMES[chosenSpectrum] : "не выбран");
   var a = document.getElementById("angSlider").value;
   setCheck("ang", true, a + "°");
+  var c = curContours();
+  var r = routeOf(c);
+  var label = c + (r === "home" ? " · домой (Контур-0)"
+                 : r === "deep" ? " · за Орловым (Контур-2)"
+                 : " · маршрут не задан");
+  setCheck("cont", true, label);
+  refreshDestination();
 }
 
 /* --- индикатор БАС-М (биоактивный фон) --- */
@@ -1073,26 +1131,51 @@ document.getElementById("runBtn").addEventListener("click", function(){
     return;
   }
   o.innerHTML = "<span class='lbl'>ЗАПУСК ПРОТОКОЛА СТАБИЛИЗАЦИИ...</span>";
-  var contOK = curContours() === TARGET.cont;
+  var cont   = curContours();
+  var route  = routeOf(cont);             // "home" | "deep" | null
+  var contOK = route !== null;
   var freqOK = parseInt(freqSlider.value,10) === TARGET.freq;
   var specOK = chosenSpectrum === TARGET.spec;
   var angOK  = parseInt(angSlider.value,10) === TARGET.ang;
   setTimeout(function(){
     if(contOK && freqOK && specOK && angOK){
-      o.innerHTML = "<span class='ok big'>КАЛИБРОВКА ПОДТВЕРЖДЕНА.\nПРОБИВАЕТСЯ ВЫХОД...\nДВЕРЬ ЛАБОРАТОРИИ — ПОРТАЛ. 100%</span>";
-      document.getElementById("fstat").textContent = "ВЫХОД ОТКРЫТ";
-      setTimeout(function(){ document.getElementById("portal").classList.add("show"); }, 1100);
+      var dest = (route === "home")
+        ? "ПУНКТ НАЗНАЧЕНИЯ: КОНТУР-0 (выход домой)"
+        : "ПУНКТ НАЗНАЧЕНИЯ: КОНТУР-2 (за Орловым, вглубь)";
+      o.innerHTML = "<span class='ok big'>КАЛИБРОВКА ПОДТВЕРЖДЕНА.\nПРОБИВАЕТСЯ ВЫХОД...\nДВЕРЬ ЛАБОРАТОРИИ — ПОРТАЛ. 100%\n" + dest + "</span>";
+      document.getElementById("fstat").textContent =
+        route === "home" ? "ВЫХОД ОТКРЫТ · КОНТУР-0" : "ПОРТАЛ ОТКРЫТ · КОНТУР-2";
+      setTimeout(function(){ showPortal(route); }, 1100);
       return;
     }
     bumpAnomaly();
     var msg = "<span class='err'>ОТКАЗ. ПОРТАЛ НЕ СФОРМИРОВАН.</span>\n<span class='lbl'>Калибровка неполна:</span>\n";
-    if(!contOK) msg += "<span class='warn'>► КОНТУРЫ: последовательность не складывается в выход. Сверьте журнал и правило на УФ-стене.</span>\n";
+    if(!contOK) msg += "<span class='warn'>► КОНТУРЫ: последовательность не складывается в выход. Сверьте журнал и правило на УФ-стене (рабочих значения два — зеркало или протокол сочленения).</span>\n";
     if(!freqOK) msg += "<span class='warn'>► ЧАСТОТА: вне резонанса. Сверьтесь с листом замера резонанса (осциллограммы АСС).</span>\n";
     if(!specOK) msg += "<span class='warn'>► СПЕКТР: не подавляет О-41. Сверьте фото калибровки.</span>\n";
     if(!angOK)  msg += "<span class='warn'>► УГОЛ: излучатель не наведён в ядро. Сверьтесь с расчётным листом наведения.</span>\n";
     o.innerHTML = msg.replace(/\n$/,"");
   }, 950);
 });
+
+function showPortal(route){
+  var p = document.getElementById("portal");
+  var h = document.getElementById("portalH");
+  var t = document.getElementById("portalT");
+  var r = document.getElementById("portalRing");
+  p.classList.remove("deep");
+  if(route === "deep"){
+    p.classList.add("deep");
+    r.textContent = "ВГЛУБЬ";
+    h.textContent = "ПОРТАЛ ПРОБИТ · КОНТУР-2";
+    t.textContent = "Калибровка принята. Запечатанная дверь лаборатории раскрылась вниз, по протоколу сочленения. По эту сторону остаётся прежний Объект; за порогом — Контур-2, куда ушёл Орлов. Идите, если идёте за ним.";
+  } else {
+    r.textContent = "ВЫХОД";
+    h.textContent = "ПОРТАЛ ПРОБИТ · КОНТУР-0";
+    t.textContent = "Калибровка принята. Запечатанная дверь лаборатории раскрылась наружу, по зеркалу сочленения. За порогом — реальность, Контур-0. Идите домой.";
+  }
+  p.classList.add("show");
+}
 document.getElementById("portalClose").addEventListener("click", function(){
   document.getElementById("portal").classList.remove("show");
 });
